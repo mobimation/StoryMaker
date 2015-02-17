@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">StoryMaker</string>
 
-
+    <string name="hint_text_record">Input text here</string>
     <string name="title_section1">Section 1</string>
     <string name="title_section2">Section 2</string>
     <string name="title_section3">Section 3</string>

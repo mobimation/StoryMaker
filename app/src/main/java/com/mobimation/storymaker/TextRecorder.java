@@ -1,5 +1,7 @@
 package com.mobimation.storymaker;
 
+import android.app.Activity;
+
 /**
  * Created by gunnarforsgren on 15-02-16.
  *
@@ -8,5 +10,10 @@ package com.mobimation.storymaker;
  * This determines the initial content of a Text Artifact which is later
  * available for editing or Clip operations.
  */
-public class TextRecorder extends Recorder {
+public class TextRecorder extends Activity implements Recorder {
+
+    @Override
+    public int record(String name) {
+        return 0;
+    }
 }

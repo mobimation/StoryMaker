@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffff9800"
+    android:id="@+id/">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Text Recorder"
+        android:id="@+id/labelTextRecorder"
+        android:layout_gravity="center_horizontal"
+        android:textSize="50sp"
+        android:typeface="serif"
+        android:layout_marginTop="20dp" />
+
+    <EditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textMultiLine"
+        android:ems="10"
+        android:id="@+id/editText"
+        android:background="@drawable/rounded"
+        android:lines="6"
+        android:layout_marginTop="40dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        android:textSize="40sp"
+        android:gravity="top"
+        android:hint="@string/hint_text_record"
+        android:theme="@android:style/Theme.Material.Light.NoActionBar.TranslucentDecor" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Done"
+        android:id="@+id/buttonTextRecordingDone"
+        android:layout_gravity="center_horizontal"
+        android:textSize="60sp"
+        android:theme="@style/Theme.AppCompat.Dialog"
+        android:layout_marginTop="10dp" />
+
+</LinearLayout>
