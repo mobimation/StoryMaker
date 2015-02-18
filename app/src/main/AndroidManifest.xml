@@ -16,6 +16,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".TextRecorder"></activity>
+        <activity android:name=".VoiceRecorder"></activity>
+        <activity android:name=".VideoRecorder"></activity>
     </application>
 
 </manifest>

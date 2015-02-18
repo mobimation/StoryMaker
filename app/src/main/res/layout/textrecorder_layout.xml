@@ -2,15 +2,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffff9800"
-    android:id="@+id/">
+    android:background="#FFFF9800"
+    android:id="@+id/lay">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Text Recorder"
-        android:id="@+id/textView"
+        android:text="@string/labeltext_text_recorder"
+        android:id="@+id/labelTextRecorder"
         android:layout_gravity="center_horizontal"
         android:textSize="50sp"
         android:typeface="serif"
@@ -21,7 +21,7 @@
         android:layout_height="wrap_content"
         android:inputType="textMultiLine"
         android:ems="10"
-        android:id="@+id/editText"
+        android:id="@+id/textRecorderEditText"
         android:background="@drawable/rounded"
         android:lines="6"
         android:layout_marginTop="40dp"
@@ -29,17 +29,18 @@
         android:layout_marginLeft="10dp"
         android:textSize="40sp"
         android:gravity="top"
-        android:hint="Input text here"
-        android:theme="@android:style/Theme.Material.Light.NoActionBar.TranslucentDecor" />
+        android:hint="@string/hint_text_record"
+        android:padding="10dp" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Done"
+        android:text="@string/buttontext_text_recorder"
         android:id="@+id/button"
         android:layout_gravity="center_horizontal"
         android:textSize="60sp"
         android:theme="@style/Theme.AppCompat.Dialog"
-        android:layout_marginTop="10dp" />
+        android:layout_marginTop="10dp"
+        android:textColor="#ffffffff" />
 
 </LinearLayout>
