@@ -21,17 +21,18 @@ public class TextRecorder extends Activity implements Recorder {
         /**
          * Load font for Text Recorder label
          */
-        // Font path
-        String fontPath = "fonts/BlackOpsOne-Regular.ttf";
-        // text view label
         TextView labelTextRecorder = (TextView) findViewById(R.id.labelTextRecorder);
-        // Loading Font Face
-        Typeface tf = Typeface.createFromAsset(getAssets(), fontPath);
-        // Applying font
-        labelTextRecorder.setTypeface(tf);
+        labelTextRecorder.setTypeface(getFont("fonts/BlackOpsOne-Regular.ttf"));
     }
     @Override
     public int record(String name) {
         return 0;
     }
+
+    private Typeface getFont(String fontName) {
+        return Typeface.createFromAsset(getAssets(), fontName);
+    }
+
+
+
 }

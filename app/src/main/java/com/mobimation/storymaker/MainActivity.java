@@ -3,6 +3,7 @@ package com.mobimation.storymaker;
 import java.util.Locale;
 
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
@@ -21,8 +22,10 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
-public class MainActivity extends ActionBarActivity {
+/**
+ * Main activity of thr StoryMaker app.
+ */
+public class MainActivity extends ActionBarActivity implements ViewPager.OnPageChangeListener{
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -38,10 +41,11 @@ public class MainActivity extends ActionBarActivity {
      * The {@link ViewPager} that will host the section contents.
      */
     ViewPager mViewPager;
+    TextView pageIndicator;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.main_layout);
 
 // b.setOnClickListener();
         // Create the adapter that will return a fragment for each of the three
@@ -50,7 +54,11 @@ public class MainActivity extends ActionBarActivity {
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.pager);
+        pageIndicator = (TextView) findViewById(R.id.pageIndicator);
+        pageIndicator.setTypeface(getFont("fonts/Digits.ttf"));
+
         mViewPager.setAdapter(mSectionsPagerAdapter);
+        mViewPager.setOnPageChangeListener(this);
 
     }
 
@@ -77,6 +85,31 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onPageScrolled(int i, float v, int i2) {
+
+    }
+
+    @Override
+    public void onPageSelected(int i) {
+        switch (i) {
+            case 0:
+                pageIndicator.setText("Abc");
+                break;
+            case 1:
+                pageIndicator.setText("aBc");
+                break;
+            case 2:
+                pageIndicator.setText("abC");
+                break;
+        }
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int i) {
+
+    }
+
 
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
@@ -92,6 +125,7 @@ public class MainActivity extends ActionBarActivity {
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
+
             return PlaceholderFragment.newInstance(position + 1);
         }
 
@@ -101,16 +135,20 @@ public class MainActivity extends ActionBarActivity {
             return 3;
         }
 
+
         @Override
         public CharSequence getPageTitle(int position) {
             Locale l = Locale.getDefault();
             switch (position) {
                 case 0:
-                    return getString(R.string.title_section1).toUpperCase(l);
+                    pageIndicator.setText("Abc");
+                    return "Abc";
                 case 1:
-                    return getString(R.string.title_section2).toUpperCase(l);
+                    pageIndicator.setText("aBc");
+                    return "aBc";
                 case 2:
-                    return getString(R.string.title_section3).toUpperCase(l);
+                    pageIndicator.setText("abC");
+                    return "abC";
             }
             return null;
         }
@@ -154,6 +192,9 @@ public class MainActivity extends ActionBarActivity {
             });
             return rootView;
         }
+    }
+    private Typeface getFont(String fontName) {
+        return Typeface.createFromAsset(getAssets(), fontName);
     }
 
 }
