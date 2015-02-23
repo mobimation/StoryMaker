@@ -1,8 +1,11 @@
 package com.mobimation.storymaker;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 /**
@@ -14,6 +17,7 @@ import android.widget.TextView;
  * available for editing or Clip operations.
  */
 public class TextRecorder extends Activity implements Recorder {
+    private static String TAG = TextRecorder.class.getName();
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,6 +27,14 @@ public class TextRecorder extends Activity implements Recorder {
          */
         TextView labelTextRecorder = (TextView) findViewById(R.id.labelTextRecorder);
         labelTextRecorder.setTypeface(getFont("fonts/BlackOpsOne-Regular.ttf"));
+
+        final Button b= (Button)findViewById(R.id.buttonTextRecordingDone);
+        b.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                TextRecorder.this.finish();
+            }
+        });
     }
     @Override
     public int record(String name) {

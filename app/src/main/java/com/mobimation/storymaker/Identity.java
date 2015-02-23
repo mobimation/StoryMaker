@@ -6,4 +6,5 @@ package com.mobimation.storymaker;
  * An Identity is a piece of data that uniquely identifies a Story.
  */
 public class Identity {
+    private static String TAG = Identity.class.getName();
 }

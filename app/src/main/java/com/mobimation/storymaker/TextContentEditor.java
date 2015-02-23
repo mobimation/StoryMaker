@@ -7,4 +7,5 @@ package com.mobimation.storymaker;
  *
  */
 public class TextContentEditor extends ContentEditor {
+    private static String TAG = TextContentEditor.class.getName();
 }

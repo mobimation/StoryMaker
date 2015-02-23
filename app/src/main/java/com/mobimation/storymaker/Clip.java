@@ -8,4 +8,5 @@ package com.mobimation.storymaker;
  *
  */
 public class Clip {
+    private static String TAG = Clip.class.getName();
 }

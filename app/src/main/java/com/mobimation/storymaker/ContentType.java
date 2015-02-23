@@ -7,4 +7,5 @@ package com.mobimation.storymaker;
  * Current types are Text, Voice and Video.
  */
 public class ContentType {
+    private static String TAG = ContentType.class.getName();
 }

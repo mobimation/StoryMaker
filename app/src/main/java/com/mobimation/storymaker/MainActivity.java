@@ -4,6 +4,7 @@ import java.util.Locale;
 
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
@@ -12,6 +13,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -21,6 +23,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.VideoView;
 
 /**
  * Main activity of thr StoryMaker app.
@@ -36,7 +39,7 @@ public class MainActivity extends ActionBarActivity implements ViewPager.OnPageC
      * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
     SectionsPagerAdapter mSectionsPagerAdapter;
-
+    private static String TAG = MainActivity.class.getName();
     /**
      * The {@link ViewPager} that will host the section contents.
      */
@@ -92,6 +95,7 @@ public class MainActivity extends ActionBarActivity implements ViewPager.OnPageC
 
     @Override
     public void onPageSelected(int i) {
+        Log.d(TAG, "onPageSelected() - page=" + i);
         switch (i) {
             case 0:
                 pageIndicator.setText("Abc");
@@ -125,8 +129,17 @@ public class MainActivity extends ActionBarActivity implements ViewPager.OnPageC
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-
-            return PlaceholderFragment.newInstance(position + 1);
+            Log.d("SectionsPagerAdapter", "getItem() - position=" + position+1);
+            switch (position) {
+                case 0:
+                    return PlayerFragment.newInstance(position+1);
+                case 1:
+                    // return PlaceholderFragment.newInstance(position + 1);
+                    return PlaceholderFragment.newInstance(position+1);
+                case 2:
+                    return PlaceholderFragment.newInstance(position+1);
+            }
+            return PlaceholderFragment.newInstance(position+1);
         }
 
         @Override
@@ -139,6 +152,7 @@ public class MainActivity extends ActionBarActivity implements ViewPager.OnPageC
         @Override
         public CharSequence getPageTitle(int position) {
             Locale l = Locale.getDefault();
+            Log.d("SectionsPagerAdapter", "getPageTitle() - position=" + position);
             switch (position) {
                 case 0:
                     pageIndicator.setText("Abc");
@@ -193,6 +207,73 @@ public class MainActivity extends ActionBarActivity implements ViewPager.OnPageC
             return rootView;
         }
     }
+
+
+    /**
+     * A placeholder fragment containing a simple view.
+     */
+    public static class PlayerFragment extends Fragment {
+        /**
+         * The fragment argument representing the section number for this
+         * fragment.
+         */
+        VideoView vv;
+        View rootView;
+
+        private static final String ARG_SECTION_NUMBER = "section_number";
+
+        /**
+         * Returns a new instance of this fragment for the given section
+         * number.
+         */
+        public static PlayerFragment newInstance(int sectionNumber) {
+            Log.d("PlayerFragment","sectionNumber="+sectionNumber);
+            PlayerFragment fragment = new PlayerFragment();
+            Bundle args = new Bundle();
+            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
+            fragment.setArguments(args);
+            return fragment;
+        }
+
+        public PlayerFragment() {
+            Log.d("PlayerFragment", "constructor");
+        }
+
+        @Override
+        public void setUserVisibleHint(boolean isVisibleToUser)
+        {
+            super.setUserVisibleHint(isVisibleToUser);
+            if (this.isVisible())
+            {
+                if (!isVisibleToUser)   // If we are becoming invisible, then...
+                {
+                   Log.d("PlayerFragment", "pause");
+                   vv.pause(); //pause or stop video
+                }
+
+                if (isVisibleToUser) // If we are becoming visible, then...
+                {
+                   Log.d("PlayerFragment", "resume");
+                   vv.resume(); //play your video
+                }
+            }
+        }
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+            Log.d("PlayerFragment","onCreateView()");
+            rootView = inflater.inflate(R.layout.activity_player, container, false);
+
+            vv= (VideoView) rootView.findViewById(R.id.video);
+            vv.requestFocus();
+            vv.setVideoURI(Uri.parse("http://www.lilldata.se/suzuki/GT750M-1.flv"));
+            vv.start();
+
+            return rootView;
+        }
+    }
+
+
     private Typeface getFont(String fontName) {
         return Typeface.createFromAsset(getAssets(), fontName);
     }

@@ -11,4 +11,9 @@
     <string name="action_settings">Settings</string>
 
     <string name="buttontext_text_recorder">DONE</string>
+    <string name="title_activity_timeline_editor">TimelineEditorActivity</string>
+
+    <string name="title_activity_player">Story Player</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 </resources>

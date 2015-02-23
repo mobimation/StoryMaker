@@ -7,4 +7,5 @@ package com.mobimation.storymaker;
  * A Creator can share a Story with other Creators.
  */
 public class Community {
+    private static String TAG = Community.class.getName();
 }

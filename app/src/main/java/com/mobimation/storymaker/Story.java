@@ -6,4 +6,5 @@ package com.mobimation.storymaker;
  * A Story is the result of having edited content on a Timeline.
  */
 public class Story {
+    private static String TAG = Story.class.getName();
 }

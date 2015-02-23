@@ -6,4 +6,5 @@ package com.mobimation.storymaker;
  * A PasteBuffer is an intermediate data area used for pasting one or more Cut objects.
  */
 public class PasteBuffer {
+    private static String TAG = PasteBuffer.class.getName();
 }

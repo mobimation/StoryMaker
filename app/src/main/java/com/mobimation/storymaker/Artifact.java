@@ -7,4 +7,5 @@ package com.mobimation.storymaker;
  *
  */
 public class Artifact {
+    private static String TAG = Artifact.class.getName();
 }

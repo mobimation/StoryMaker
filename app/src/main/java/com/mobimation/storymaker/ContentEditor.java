@@ -9,4 +9,5 @@ package com.mobimation.storymaker;
  * of creating an edited piece ot Artifact.
  */
 public class ContentEditor {
+    private static String TAG = ContentEditor.class.getName();
 }

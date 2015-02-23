@@ -6,4 +6,5 @@ package com.mobimation.storymaker;
  * A Share is an object that describes what Artifact or Story is shared with one other Creator.
  */
 public class Share {
+    private static String TAG = Share.class.getName();
 }

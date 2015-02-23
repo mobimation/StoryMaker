@@ -10,4 +10,5 @@ package com.mobimation.storymaker;
  * for an identity.
  */
 public class Associator {
+    private static String TAG = Associator.class.getName();
 }
