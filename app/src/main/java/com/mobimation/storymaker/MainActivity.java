@@ -1,20 +1,15 @@
 package com.mobimation.storymaker;
 
-import java.util.Locale;
-
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,11 +17,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.VideoView;
 
 /**
- * Main activity of thr StoryMaker app.
+ * Main activity of the StoryMaker app.
  */
 public class MainActivity extends ActionBarActivity implements ViewPager.OnPageChangeListener{
 
@@ -132,7 +126,7 @@ public class MainActivity extends ActionBarActivity implements ViewPager.OnPageC
             Log.d("SectionsPagerAdapter", "getItem() - position=" + position+1);
             switch (position) {
                 case 0:
-                    return PlayerFragment.newInstance(position+1);
+                    return PlayLaunchFragment.newInstance(position+1);
                 case 1:
                     // return PlaceholderFragment.newInstance(position + 1);
                     return PlaceholderFragment.newInstance(position+1);
@@ -151,7 +145,6 @@ public class MainActivity extends ActionBarActivity implements ViewPager.OnPageC
 
         @Override
         public CharSequence getPageTitle(int position) {
-            Locale l = Locale.getDefault();
             Log.d("SectionsPagerAdapter", "getPageTitle() - position=" + position);
             switch (position) {
                 case 0:
@@ -165,6 +158,46 @@ public class MainActivity extends ActionBarActivity implements ViewPager.OnPageC
                     return "abC";
             }
             return null;
+        }
+    }
+
+    /**
+     * A placeholder fragment containing a simple view.
+     */
+    public static class PlayLaunchFragment extends Fragment {
+        /**
+         * The fragment argument representing the section number for this
+         * fragment.
+         */
+        private static final String ARG_SECTION_NUMBER = "section_number";
+
+        /**
+         * Returns a new instance of this fragment for the given section
+         * number.
+         */
+        public static PlayLaunchFragment newInstance(int sectionNumber) {
+            PlayLaunchFragment fragment = new PlayLaunchFragment();
+            Bundle args = new Bundle();
+            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
+            fragment.setArguments(args);
+            return fragment;
+        }
+
+        public PlayLaunchFragment() {
+        }
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+            final View rootView = inflater.inflate(R.layout.fragment_play, container, false);
+            final Button b= (Button)rootView.findViewById(R.id.buttonVideoPlay);
+            b.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(new Intent(getActivity(), Player.class));
+                }
+            });
+            return rootView;
         }
     }
 

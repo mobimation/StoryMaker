@@ -1,7 +1,7 @@
 package com.mobimation.storymaker;
 
+import android.app.Activity;
 import android.net.Uri;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -10,7 +10,7 @@ import android.view.WindowManager;
 import android.widget.VideoView;
 
 
-public class Player extends ActionBarActivity {
+public class Player extends Activity {
 
     VideoView vv;
     private static String TAG = Player.class.getName();
