@@ -36,19 +36,22 @@ public class Player extends Activity implements MediaPlayer.OnPreparedListener
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Script script= new Script(this);
+
+        // Play in fullscreen mode
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         setContentView(R.layout.activity_player);
 
+        // Play a video sample just to verify it works
         vv= (VideoView) this.findViewById(R.id.video);
         vv.requestFocus();
         // vv.setVideoURI(Uri.parse("http://www.lilldata.se/suzuki/GT750M-1.flv"));
         vv.setVideoURI(Uri.parse("http://laidback.tv/video/goldie.mp4"));
         vv.setOnPreparedListener(this);
         vv.start();
-        Log.d(TAG,"Starting..");
+        Log.d(TAG,"Video playback starting..");
     }
 
 
