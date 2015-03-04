@@ -1,5 +1,7 @@
 package com.mobimation.storymaker;
 
+import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.Uri;
@@ -17,7 +19,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 
 /**
  * Main activity of the StoryMaker app.
@@ -44,7 +50,7 @@ public class MainActivity extends ActionBarActivity implements ViewPager.OnPageC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_layout);
 
-// b.setOnClickListener();
+        // b.setOnClickListener();
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -131,7 +137,7 @@ public class MainActivity extends ActionBarActivity implements ViewPager.OnPageC
                     // return PlaceholderFragment.newInstance(position + 1);
                     return PlaceholderFragment.newInstance(position+1);
                 case 2:
-                    return PlaceholderFragment.newInstance(position+1);
+                    return TimelineFragment.newInstance(position+1);
             }
             return PlaceholderFragment.newInstance(position+1);
         }
@@ -241,74 +247,54 @@ public class MainActivity extends ActionBarActivity implements ViewPager.OnPageC
         }
     }
 
+    private Typeface getFont(String fontName) {
+        return Typeface.createFromAsset(getAssets(), fontName);
+    }
+
 
     /**
-     * A placeholder fragment containing a simple view.
+    * A placeholder fragment containing a simple view.
+    */
+    public static class TimelineFragment extends Fragment {
+    /**
+     * The fragment argument representing the section number for this
+     * fragment.
      */
-    public static class PlayerFragment extends Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
-        VideoView vv;
         View rootView;
 
         private static final String ARG_SECTION_NUMBER = "section_number";
 
         /**
-         * Returns a new instance of this fragment for the given section
-         * number.
+        * Returns a new instance of this fragment for the given section
+        * number.
          */
-        public static PlayerFragment newInstance(int sectionNumber) {
-            Log.d("PlayerFragment","sectionNumber="+sectionNumber);
-            PlayerFragment fragment = new PlayerFragment();
-            Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            fragment.setArguments(args);
-            return fragment;
+        public static TimelineFragment newInstance(int sectionNumber) {
+         Log.d("TimelineFragment","sectionNumber="+sectionNumber);
+         TimelineFragment fragment = new TimelineFragment();
+         Bundle args = new Bundle();
+         args.putInt(ARG_SECTION_NUMBER, sectionNumber);
+         fragment.setArguments(args);
+         return fragment;
         }
 
-        public PlayerFragment() {
-            Log.d("PlayerFragment", "constructor");
+        public TimelineFragment() {
+            Log.d("TimelineFragment", "constructor");
         }
 
-        @Override
-        public void setUserVisibleHint(boolean isVisibleToUser)
-        {
-            super.setUserVisibleHint(isVisibleToUser);
-            if (this.isVisible())
-            {
-                if (!isVisibleToUser)   // If we are becoming invisible, then...
-                {
-                   Log.d("PlayerFragment", "pause");
-                   vv.pause(); //pause or stop video
-                }
-
-                if (isVisibleToUser) // If we are becoming visible, then...
-                {
-                   Log.d("PlayerFragment", "resume");
-                   vv.resume(); //play your video
-                }
-            }
-        }
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            Log.d("PlayerFragment","onCreateView()");
-            rootView = inflater.inflate(R.layout.activity_player, container, false);
-
-            vv= (VideoView) rootView.findViewById(R.id.video);
-            vv.requestFocus();
-            vv.setVideoURI(Uri.parse("http://www.lilldata.se/suzuki/GT750M-1.flv"));
-            vv.start();
-
+                             Bundle savedInstanceState) {
+            Log.d("TimelineFragment","onCreateView()");
+            rootView = inflater.inflate(R.layout.fragment_timeline, container, false);
+            final Button b= (Button)rootView.findViewById(R.id.buttonTimeline);
+            b.setOnClickListener(new View.OnClickListener() {
+               @Override
+              public void onClick(View view) {
+                  startActivity(new Intent(getActivity(), TimelineEditorActivity.class));
+              }
+            });
             return rootView;
         }
     }
-
-
-    private Typeface getFont(String fontName) {
-        return Typeface.createFromAsset(getAssets(), fontName);
-    }
-
 }
+

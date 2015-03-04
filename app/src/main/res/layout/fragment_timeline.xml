@@ -1,6 +1,5 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:screenOrientation="portrait"
     android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
@@ -10,16 +9,20 @@
     <TextView android:id="@+id/section_label" android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"></FrameLayout>
+
     <TextView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Video Play Page"
+        android:text="Timeline Test Page"
         android:id="@+id/textView"
         android:layout_below="@+id/section_label"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:textSize="40sp"
+        android:textSize="30sp"
         android:gravity="center_horizontal"
         android:inputType="none"
         android:singleLine="true" />
@@ -27,12 +30,11 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Play Video"
-        android:id="@+id/buttonVideoPlay"
+        android:text="Timeline"
+        android:id="@+id/buttonTimeline"
         android:layout_below="@+id/textView"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="81dp"
-        android:textSize="30sp"
-        android:focusableInTouchMode="true" />
+        android:textSize="30sp" />
 
 </RelativeLayout>
