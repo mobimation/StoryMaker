@@ -46,12 +46,15 @@ public class Player extends Activity implements MediaPlayer.OnPreparedListener
 
         // Play a video sample just to verify it works
         vv= (VideoView) this.findViewById(R.id.video);
+        new Progressor().execute(vv);
+        /*
         vv.requestFocus();
         // vv.setVideoURI(Uri.parse("http://www.lilldata.se/suzuki/GT750M-1.flv"));
         vv.setVideoURI(Uri.parse("http://laidback.tv/video/goldie.mp4"));
         vv.setOnPreparedListener(this);
         vv.start();
         Log.d(TAG,"Video playback starting..");
+        */
     }
 
 
