@@ -17,16 +17,25 @@ import android.widget.VideoView;
  * and optionally some transition and interactivity effects.
  *
  */
-public class Progressor extends AsyncTask<VideoView, Void, Integer> implements MediaPlayer.OnPreparedListener {
+public class Progressor extends AsyncTask<Object, Void, Integer> implements MediaPlayer.OnPreparedListener {
     private static String TAG = Progressor.class.getName();
+    VideoView vv;
+    Player p;
+    Script script;
 
-    protected Integer doInBackground(VideoView... params) {
+    // Optional constructor that declare two parameters
+    public Progressor(Player p, Script script) {
+        this.p=p;
+        vv=(VideoView)p.findViewById(R.id.video);
+        this.script=script;
+    }
 
+    protected Integer doInBackground(Object... params) {
+        // Process StoryMaker script
         int result=0;
-        VideoView vv=params[0];
         vv.requestFocus();
-        // vv.setVideoURI(Uri.parse("http://www.lilldata.se/suzuki/GT750M-1.flv"));
-        vv.setVideoURI(Uri.parse("http://laidback.tv/video/goldie.mp4"));
+        vv.setVideoURI(Uri.parse("http://www.lilldata.se/suzuki/GT750M-1.flv"));
+        // vv.setVideoURI(Uri.parse(scriptName));
         vv.setOnPreparedListener(this);
         vv.start();
         Log.d(TAG, "Video playback starting..");

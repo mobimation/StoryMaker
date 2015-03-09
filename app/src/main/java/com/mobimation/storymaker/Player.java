@@ -26,6 +26,8 @@ import android.widget.VideoView;
  * One or several parallel Scene progressions with their individual
  * start time, duration and overlapping make up a complete Story.
  *
+ * TODO: Player is currently the test entry point for trying out the script processing.
+ *
  */
 public class Player extends Activity implements MediaPlayer.OnPreparedListener
 {
@@ -35,7 +37,6 @@ public class Player extends Activity implements MediaPlayer.OnPreparedListener
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Script script= new Script(this);
 
         // Play in fullscreen mode
         requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -45,8 +46,9 @@ public class Player extends Activity implements MediaPlayer.OnPreparedListener
         setContentView(R.layout.activity_player);
 
         // Play a video sample just to verify it works
-        vv= (VideoView) this.findViewById(R.id.video);
-        new Progressor().execute(vv);
+        String sample="http://laidback.tv/video/goldie.mp4";
+
+        new Progressor(this,new Script(this,R.raw.promo)).execute();
         /*
         vv.requestFocus();
         // vv.setVideoURI(Uri.parse("http://www.lilldata.se/suzuki/GT750M-1.flv"));

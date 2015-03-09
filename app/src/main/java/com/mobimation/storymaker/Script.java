@@ -28,11 +28,11 @@ public class Script {
     ArrayList<String> list;
     private static String TAG = Script.class.getName();
     // Default local script
-    public Script(Context c) {
+    public Script(Context c, int resource) {
         Resources res = c.getResources();
         list=new ArrayList<String>();
         String line;
-        InputStream is = res.openRawResource(R.raw.promo);
+        InputStream is = res.openRawResource(resource);
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
             try {
