@@ -39,6 +39,10 @@
             android:name=".PlayCheckActivity"
             android:label="@string/title_activity_play_check" >
         </activity>
+        <activity
+            android:name=".AudioPlayActivity"
+            android:label="@string/title_activity_audio_play" >
+        </activity>
     </application>
 
 </manifest>
