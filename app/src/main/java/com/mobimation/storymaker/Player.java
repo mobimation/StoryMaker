@@ -45,18 +45,8 @@ public class Player extends Activity implements MediaPlayer.OnPreparedListener
 
         setContentView(R.layout.activity_player);
 
-        // Play a video sample just to verify it works
-        String sample="http://laidback.tv/video/goldie.mp4";
-
-        new Progressor(this,new Script(this,R.raw.promo)).execute();
-        /*
-        vv.requestFocus();
-        // vv.setVideoURI(Uri.parse("http://www.lilldata.se/suzuki/GT750M-1.flv"));
-        vv.setVideoURI(Uri.parse("http://laidback.tv/video/goldie.mp4"));
-        vv.setOnPreparedListener(this);
-        vv.start();
-        Log.d(TAG,"Video playback starting..");
-        */
+        // Test run local "promo.sm" test script.
+        new Progressor().execute(this,new Script(this,R.raw.promo));
     }
 
 

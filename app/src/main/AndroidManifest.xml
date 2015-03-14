@@ -33,6 +33,7 @@
             android:name=".Player"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_player"
+            android:theme="@style/Theme.NoBackground"
             android:screenOrientation="landscape" >
         </activity>
         <activity
