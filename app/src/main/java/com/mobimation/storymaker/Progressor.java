@@ -116,6 +116,7 @@ public class Progressor extends AsyncTask<Object, Object, Integer> implements Me
         // ====== Command interpreter begins
         Log.d(TAG,"onProgressUpdate(): param length="+values.length);
         if (((String)values[0]).toLowerCase().equals("video")) {
+            //-----------VIDEO COMMAND------------------------
             vv.requestFocus();
             vv.setVideoURI(Uri.parse((String)values[1]));
             // vv.setVideoURI(Uri.parse(scriptName));
@@ -136,7 +137,7 @@ public class Progressor extends AsyncTask<Object, Object, Integer> implements Me
                 }
             };
             progress.postDelayed(onEverySecond, 1000);
-        }
+        } //------------END OF VIDEO COMMAND------------------
         else
             Log.e(TAG,"Unexpected OPCODE:"+(String)values[0]);
         // ====== Command interpreter ends
