@@ -9,6 +9,8 @@ import android.util.Log;
 import android.widget.TextView;
 import android.widget.VideoView;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.URL;
 import java.util.StringTokenizer;
 import java.util.concurrent.TimeUnit;
@@ -26,9 +28,13 @@ import java.util.concurrent.TimeUnit;
  * TODO: Let´ see how well this works.
  *
  */
-public class Progressor extends AsyncTask<Object, Object, Integer> implements MediaPlayer.OnPreparedListener {
+public class Progressor extends AsyncTask<Object, Object, Integer>
+        implements  MediaPlayer.OnPreparedListener,
+                    MediaPlayer.OnErrorListener,
+                    MediaPlayer.OnInfoListener {
     private static String TAG = Progressor.class.getName();
     VideoView vv;      // The video player view
+    int volume=0;
     Player player;     // The player
     TextView progress; // Video playback progress indicator
     Script script;     // The script we are processing
@@ -73,7 +79,8 @@ public class Progressor extends AsyncTask<Object, Object, Integer> implements Me
                 if (opcode.toLowerCase().equals("video")) {
                    String url=tokens.nextToken();
                    String duration=tokens.nextToken();
-                   publishProgress(opcode,url,startTime,duration);
+                   publishProgress(opcode,url,startTime,duration); // Launches scene command
+                   // Returns here immediately
                 }
             }
             else
@@ -89,12 +96,12 @@ public class Progressor extends AsyncTask<Object, Object, Integer> implements Me
     /**
      * Prepare
 
+
     @Override
     protected void onPreExecute() {
-
+        this.mp=null;
         super.onPreExecute();
-    }
-     */
+    } */
 
     /**
      * Update Player scene
@@ -117,10 +124,16 @@ public class Progressor extends AsyncTask<Object, Object, Integer> implements Me
         Log.d(TAG,"onProgressUpdate(): param length="+values.length);
         if (((String)values[0]).toLowerCase().equals("video")) {
             //-----------VIDEO COMMAND------------------------
-            vv.requestFocus();
-            vv.setVideoURI(Uri.parse((String)values[1]));
+//            vv.requestFocus();
+              vv.setOnErrorListener(this);
+              vv.setOnInfoListener(this);
+                Log.d(TAG,"Using URL "+(String)values[1]);
+                Uri u=Uri.parse((String) values[1]);
+                vv.setVideoURI(u);
+
             // vv.setVideoURI(Uri.parse(scriptName));
             vv.setOnPreparedListener(this);
+            volume=100;  // Linear percentage of user set volume
             vv.start();
             Log.d(TAG, "Video playback starts");
             final Handler m_handler;
@@ -129,6 +142,7 @@ public class Progressor extends AsyncTask<Object, Object, Integer> implements Me
             onEverySecond = new Runnable() {
                 @Override
                 public void run() {
+                        Log.d(TAG,"progress..");  // TODO: Timing: this delay makes indication consistent..
                         Long tv=new Long(vv.getCurrentPosition());
                         if (vv.isPlaying()) {
                             progress.setText(getTimeString(tv));
@@ -149,12 +163,13 @@ public class Progressor extends AsyncTask<Object, Object, Integer> implements Me
      *  Do cleanup and what else
      */
     protected void onPostExecute(Integer result) {
-        // mImageView.setImageBitmap(result);
+        Log.d(TAG,"onPostExecute() result="+result);
     }
 
     @Override
     public void onPrepared(MediaPlayer mp) {
-
+       Float vo=vol(volume);
+       mp.setVolume(vo,vo);
     }
 
     static String getTimeString(Long millis) {
@@ -164,5 +179,22 @@ public class Progressor extends AsyncTask<Object, Object, Integer> implements Me
                     TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)),
             TimeUnit.MILLISECONDS.toSeconds(millis) -
                     TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
+    }
+    // Return a logarithmic MediaPlayer audio volume from a linear audio volume 0-100
+    float vol(int value) {
+        return 1-(float)(Math.log(100-value)/Math.log(100));
+    }
+
+
+    @Override
+    public boolean onError(MediaPlayer mp, int what, int extra) {
+        Log.e(TAG,"onError() what="+what+" extra="+extra);
+        return false;
+    }
+
+    @Override
+    public boolean onInfo(MediaPlayer mp, int what, int extra) {
+        Log.d(TAG,"onInfo()  what="+what+" extra="+extra);
+        return false;
     }
 }
