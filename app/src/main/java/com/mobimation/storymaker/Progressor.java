@@ -81,6 +81,7 @@ public class Progressor extends AsyncTask<Object, Object, Integer>
                 if (opcode.toLowerCase().equals("video")) {
                    String url=tokens.nextToken();
                    String duration=tokens.nextToken();
+                   // TODO: Replace with scheduling job
                    publishProgress(opcode,url,startTime,duration); // Launches scene command
                    // Returns here immediately
                 }
@@ -122,10 +123,6 @@ public class Progressor extends AsyncTask<Object, Object, Integer>
      */
     @Override
     protected void onProgressUpdate(Object... values) {
-        // TODO: Example of StoryEvent construction
-        StoryEvent se = new StoryEvent(EventType.AUDIO,Uri.parse("http://medial.com"),0L,40000L);
-        se.schedule();
-
         // ====== Command interpreter begins
         Log.d(TAG,"onProgressUpdate(): param length="+values.length);
         if (((String)values[0]).toLowerCase().equals("video")) {
@@ -141,6 +138,11 @@ public class Progressor extends AsyncTask<Object, Object, Integer>
             vv.setOnPreparedListener(this);
             volume=100;  // Linear percentage of user set volume
             vv.start();
+
+            // TODO: Example of StoryEvent construction
+            StoryEvent se = new StoryEvent(EventType.VIDEO,u,0L,40000L);
+            se.schedule();
+
             olabel("test",0,0,0,0L,true);
             Log.d(TAG, "Video playback starts");
             final Handler m_handler;
@@ -176,7 +178,7 @@ public class Progressor extends AsyncTask<Object, Object, Integer>
     @Override
     public void onPrepared(MediaPlayer mp) {
        Float vo=vol(volume);
-       mp.setVolume(vo,vo);
+       mp.setVolume(vo, vo);
     }
 
     static String getTimeString(Long millis) {
