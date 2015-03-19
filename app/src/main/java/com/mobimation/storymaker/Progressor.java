@@ -6,6 +6,8 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.util.Log;
+import android.view.View;
+import android.view.ViewStub;
 import android.widget.TextView;
 import android.widget.VideoView;
 
@@ -120,6 +122,10 @@ public class Progressor extends AsyncTask<Object, Object, Integer>
      */
     @Override
     protected void onProgressUpdate(Object... values) {
+        // TODO: Example of StoryEvent construction
+        StoryEvent se = new StoryEvent(EventType.AUDIO,Uri.parse("http://medial.com"),0L,40000L);
+        se.schedule();
+
         // ====== Command interpreter begins
         Log.d(TAG,"onProgressUpdate(): param length="+values.length);
         if (((String)values[0]).toLowerCase().equals("video")) {
@@ -135,6 +141,7 @@ public class Progressor extends AsyncTask<Object, Object, Integer>
             vv.setOnPreparedListener(this);
             volume=100;  // Linear percentage of user set volume
             vv.start();
+            olabel("test",0,0,0,0L,true);
             Log.d(TAG, "Video playback starts");
             final Handler m_handler;
             m_handler = new Handler();
@@ -197,4 +204,40 @@ public class Progressor extends AsyncTask<Object, Object, Integer>
         Log.d(TAG,"onInfo()  what="+what+" extra="+extra);
         return false;
     }
+
+    /**
+     *
+     * Schedule placing a label on top of the parent View
+     * Optionally animate a fade in/out transition
+     *
+     * @param text          Text label to be displayed
+     * @param x             Horizontal start in percentage of parent width
+     * @param y             Vertical start in percentage of parent height
+     * @param startMs       Delay in ms until start from calling this method 0=immediately
+     * @param durationMs    Duration in ms until taken down 0=permanent
+     * @param animate       true=fade in/out false=no animation
+     * @return              0=ok
+     */
+    private void olabel(String text, int x, int y,int startMs, long durationMs, boolean animate) {
+        // On demand (lazy) inflating of a layout
+        TextView tv;
+        ViewStub stub = (ViewStub) player.findViewById(R.id.player_overlay);
+        View inflated = stub.inflate();
+
+        inflated.setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * Schedule a StoryEvent insertion.
+     * During interpretation of a script any StoryEvent that occurs are scheduled
+     * to be carried out at a certain point in time. When that time is reached
+     * a handler for the type of effect is launched to manage the playback
+     * of the particular type of event.
+     * @param event
+     */
+    private void schedule(StoryEvent event) {
+
+    }
+
+
 }
