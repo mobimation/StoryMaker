@@ -137,7 +137,7 @@ public class Progressor extends AsyncTask<Object, Object, Integer>
             // vv.setVideoURI(Uri.parse(scriptName));
             vv.setOnPreparedListener(this);
             volume=100;  // Linear percentage of user set volume
-            vv.start();
+
 
             // TODO: Example of StoryEvent construction
             StoryEvent se = new StoryEvent(EventType.VIDEO,u,0L,40000L);
@@ -175,10 +175,15 @@ public class Progressor extends AsyncTask<Object, Object, Integer>
         Log.d(TAG,"onPostExecute() result="+result);
     }
 
+    /**
+     * We arrive here when video is ready to begin playing
+     * @param mp
+     */
     @Override
     public void onPrepared(MediaPlayer mp) {
        Float vo=vol(volume);
        mp.setVolume(vo, vo);
+       vv.start();
     }
 
     static String getTimeString(Long millis) {
