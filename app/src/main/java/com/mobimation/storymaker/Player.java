@@ -29,7 +29,7 @@ import android.widget.VideoView;
  * TODO: Player is currently the test entry point for trying out the script processing.
  *
  */
-public class Player extends Activity implements MediaPlayer.OnPreparedListener
+public class Player extends Activity
 {
     VideoView vv;
     private static String TAG = Player.class.getName();
@@ -70,10 +70,5 @@ public class Player extends Activity implements MediaPlayer.OnPreparedListener
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onPrepared(MediaPlayer mp) {
-        Log.d(TAG, "Prepared!");
     }
 }

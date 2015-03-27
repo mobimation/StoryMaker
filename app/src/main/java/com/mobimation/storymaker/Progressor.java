@@ -33,13 +33,19 @@ import java.util.concurrent.TimeUnit;
 public class Progressor extends AsyncTask<Object, Object, Integer>
         implements  MediaPlayer.OnPreparedListener,
                     MediaPlayer.OnErrorListener,
-                    MediaPlayer.OnInfoListener {
+                    MediaPlayer.OnInfoListener,
+                    PromptResponse {
     private static String TAG = Progressor.class.getName();
     VideoView vv;      // The video player view
     int volume=0;
     Player player;     // The player
     TextView progress; // Video playback progress indicator
     Script script;     // The script we are processing
+    private PromptResponse promptListener;
+
+    public void setPromptListener(PromptResponse listener) {
+        promptListener=listener;
+    }
 /*
     // Optional constructor that declare two parameters
     public Progressor(Player p, Script script) {
@@ -50,10 +56,11 @@ public class Progressor extends AsyncTask<Object, Object, Integer>
 */
     protected Integer doInBackground(Object... params) {
         // Process StoryMaker script
+        setPromptListener(this);
         this.player=(Player)params[0];
         vv=(VideoView)player.findViewById(R.id.video);
         this.script=(Script)params[1];
-        progress=(TextView)player.findViewById(R.id.progress);
+        // progress=(TextView)player.findViewById(R.id.progress);
         int result=0;
         String line;
         Log.d(TAG,"Script has "+script.lines()+" lines.");
@@ -78,11 +85,10 @@ public class Progressor extends AsyncTask<Object, Object, Integer>
                 String startTime=tokens.nextToken();
                 // For now skip waiting for start time and go on with operation
                 String opcode=tokens.nextToken();
-                if (opcode.toLowerCase().equals("video")) {
+                if (opcode.toLowerCase().equals("video")) {  // VIDEO event
                    String url=tokens.nextToken();
                    String duration=tokens.nextToken();
-                   // TODO: Replace with scheduling job
-                   publishProgress(opcode,url,startTime,duration); // Launches scene command
+                   publishProgress(opcode,url,startTime,duration); // Run scene command on UI thread
                    // Returns here immediately
                 }
             }
@@ -109,7 +115,8 @@ public class Progressor extends AsyncTask<Object, Object, Integer>
     /**
      * Update Player scene
      *
-     * onProgressUpdate implements a command set for media playback
+     * A call to publishProgress() ends up here.
+     * onProgressUpdate() implements a command set for media playback
      * according to passed arguments and operates on the UI thread of
      * the Player activity that launched the AsyncTask.
      * The first object in the variable amount of arguments represents an op code.
@@ -127,24 +134,19 @@ public class Progressor extends AsyncTask<Object, Object, Integer>
         Log.d(TAG,"onProgressUpdate(): param length="+values.length);
         if (((String)values[0]).toLowerCase().equals("video")) {
             //-----------VIDEO COMMAND------------------------
-//            vv.requestFocus();
-              vv.setOnErrorListener(this);
-              vv.setOnInfoListener(this);
-                Log.d(TAG,"Using URL "+(String)values[1]);
-                Uri u=Uri.parse((String) values[1]);
-                vv.setVideoURI(u);
-
-            // vv.setVideoURI(Uri.parse(scriptName));
-            vv.setOnPreparedListener(this);
-            volume=100;  // Linear percentage of user set volume
-
-
-            // TODO: Example of StoryEvent construction
-            StoryEvent se = new StoryEvent(EventType.VIDEO,u,0L,40000L);
+            Uri u=Uri.parse((String) values[1]);
+            StoryEvent se = new StoryEvent(player,EventType.VIDEO,u,0L,40000L);
+            // TEST: Schedule overlay
+            StoryEvent se2= new StoryEvent(player,EventType.PROMPT,R.id.player_overlay,4000,0);
             se.schedule();
+            se2.schedule();  // TEST: Schedule overlay
+            // setPromptListener(this);
+            // se2.schedule();
 
-            olabel("test",0,0,0,0L,true);
-            Log.d(TAG, "Video playback starts");
+            // ------Launch video overlay--------------------
+            // olabel("test", 0, 0, 0, 0L, true);
+/*
+            // ------Launch video progress indicator---------
             final Handler m_handler;
             m_handler = new Handler();
             Runnable onEverySecond=null;
@@ -159,7 +161,11 @@ public class Progressor extends AsyncTask<Object, Object, Integer>
                         }
                 }
             };
-            progress.postDelayed(onEverySecond, 1000);
+           m_handler.postDelayed(onEverySecond, 1000);
+            */
+     //       progress.postDelayed(onEverySecond, 1000);
+            // -----End of video progress indicator launch----
+
         } //------------END OF VIDEO COMMAND------------------
         else
             Log.e(TAG,"Unexpected OPCODE:"+(String)values[0]);
@@ -246,5 +252,15 @@ public class Progressor extends AsyncTask<Object, Object, Integer>
 
     }
 
-
+    /**
+     *
+     * @param value Generic type, here we expect an int value.
+     */
+    @Override
+    public void promptResponse(Object... value) {
+        if (value.length>0) {
+            int i=((Integer)value[0]).intValue();
+            Log.d(TAG,"Prompt response="+i);
+        }
+    }
 }
