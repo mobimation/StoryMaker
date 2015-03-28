@@ -59,11 +59,11 @@ public class StoryEvent
     String TAG=this.getClass().getName();
 
     public StoryEvent(Player player, EventType type, Uri uri, long start, long duration) {
+        this.player=player;
         this.type=type;
         this.start=start;
-        this.event=this;
         this.duration=duration;
-        this.player=player;
+        this.event=this;
         this.uri=uri;
         vv=(VideoView)player.findViewById(R.id.video);
         progress=(TextView)player.findViewById(R.id.progress);
@@ -77,6 +77,7 @@ public class StoryEvent
         this.resource=resource;
         this.start=start;
         this.duration=duration;
+        vv=(VideoView)player.findViewById(R.id.video);
     }
 
     public void pause() {
