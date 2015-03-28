@@ -137,7 +137,7 @@ public class Progressor extends AsyncTask<Object, Object, Integer>
             Uri u=Uri.parse((String) values[1]);
             StoryEvent se = new StoryEvent(player,EventType.VIDEO,u,0L,40000L);
             // TEST: Schedule overlay
-            StoryEvent se2= new StoryEvent(player,EventType.PROMPT,R.id.player_overlay,4000,0);
+            StoryEvent se2= new StoryEvent(player,EventType.PROMPT,R.id.player_overlay,8000,4000);
             se.schedule();
             se2.schedule();  // TEST: Schedule overlay
             // setPromptListener(this);

@@ -314,7 +314,7 @@ public class StoryEvent
                 insertion=imageInsertion;
                 break;
             case PROMPT:
-                overlay(R.id.player_overlay,0,0,2000,3000,true);
+                overlay(R.id.player_overlay,0,0,start,duration,true);
                 // TODO: Handle prompt response
                 break;
             default:
@@ -383,7 +383,7 @@ public class StoryEvent
      * @param animate       true=fade in/out false=no animation
      * @return              0=ok
      */
-    private void overlay(final int id, final int x, final int y,final int startMs, final long durationMs, final boolean animate) {
+    private void overlay(final int id, final int x, final int y,final long startMs, final long durationMs, final boolean animate) {
         final Animation.AnimationListener animationInListener
                 = new Animation.AnimationListener(){
 
@@ -453,7 +453,7 @@ public class StoryEvent
                 if (animate) {
                     // Run animation to fade in overlay
                     Animation anim;
-                    anim= AnimationUtils.loadAnimation(player.getApplicationContext(),R.anim.fadein_2s);
+                    anim= AnimationUtils.loadAnimation(player.getApplicationContext(),R.anim.fadein);
                     // progress.setVisibility(View.VISIBLE);
                     anim.setAnimationListener(animationInListener);
                     inflated.startAnimation(anim);
