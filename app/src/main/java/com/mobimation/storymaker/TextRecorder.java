@@ -17,7 +17,7 @@ import android.widget.TextView;
  * available for editing or Clip operations.
  */
 public class TextRecorder extends Activity implements Recorder {
-    private static String TAG = TextRecorder.class.getName();
+    private static final String TAG = TextRecorder.class.getSimpleName();
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

@@ -9,6 +9,7 @@ import android.os.Message;
  * Created by gunnarforsgren on 2015-03-25.
  */
 class MediaThread extends Thread {
+    private static final String TAG = MediaThread.class.getSimpleName();
     public Handler mHandler;
 
     @Override

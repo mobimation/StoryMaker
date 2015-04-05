@@ -32,7 +32,7 @@ import android.widget.VideoView;
 public class Player extends Activity
 {
     VideoView vv;
-    private static String TAG = Player.class.getName();
+    private static final String TAG = Player.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

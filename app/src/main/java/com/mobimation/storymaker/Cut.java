@@ -7,5 +7,5 @@ package com.mobimation.storymaker;
  * A Cut can be pasted into an Timeline at any position.
  */
 public class Cut {
-    private static String TAG = Cut.class.getName();
+    private static final String TAG = Cut.class.getSimpleName();
 }

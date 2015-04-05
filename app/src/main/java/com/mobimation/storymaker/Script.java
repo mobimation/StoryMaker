@@ -26,7 +26,7 @@ public class Script {
     Uri script;
     String content;
     ArrayList<String> list;
-    private static String TAG = Script.class.getName();
+    private static final String TAG = Script.class.getSimpleName();
     // Default local script
     public Script(Context c, int resource) {
         Resources res = c.getResources();

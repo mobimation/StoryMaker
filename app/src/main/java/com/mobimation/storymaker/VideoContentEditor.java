@@ -8,5 +8,5 @@ import android.app.Activity;
  * A VideoContentEditor manages the editing of a Video based Artifact.
  */
 public class VideoContentEditor extends Activity {
-    private static String TAG = VideoContentEditor.class.getName();
+    private static final String TAG = VideoContentEditor.class.getSimpleName();
 }

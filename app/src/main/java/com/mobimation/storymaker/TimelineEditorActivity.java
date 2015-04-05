@@ -8,7 +8,7 @@ import android.view.MenuItem;
 
 public class TimelineEditorActivity extends ActionBarActivity {
 
-    private static String TAG = TimelineEditorActivity.class.getName();
+    private static final String TAG = TimelineEditorActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

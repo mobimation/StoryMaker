@@ -14,5 +14,5 @@ import android.app.Activity;
  *
  */
 public class Timeline {
-    private static String TAG = Timeline.class.getName();
+    private static final String TAG = Timeline.class.getSimpleName();
 }

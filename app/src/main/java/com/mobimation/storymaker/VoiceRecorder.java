@@ -10,7 +10,7 @@ import android.app.Activity;
  * available for editing or Clip operations.
  */
 public class VoiceRecorder extends Activity implements Recorder {
-    private static String TAG = VoiceRecorder.class.getName();
+    private static final String TAG = VoiceRecorder.class.getSimpleName();
 
     @Override
     public int record(String name) {

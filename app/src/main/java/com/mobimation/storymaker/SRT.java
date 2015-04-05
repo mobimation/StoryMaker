@@ -20,6 +20,7 @@ public class SRT {
   *
   */
  Entry[]data;
+ private static final String TAG = SRT.class.getSimpleName();
 
 
     // Return SRT duration syntax

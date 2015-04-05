@@ -15,6 +15,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.StringTokenizer;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -35,8 +36,9 @@ public class Progressor extends AsyncTask<Object, Object, Integer>
                     MediaPlayer.OnErrorListener,
                     MediaPlayer.OnInfoListener,
                     PromptResponse {
-    private static String TAG = Progressor.class.getName();
+    private static final String TAG = Progressor.class.getSimpleName();
     VideoView vv;      // The video player view
+    CountDownLatch sync=null;  // Video ready synchronization
     int volume=0;
     Player player;     // The player
     TextView progress; // Video playback progress indicator
@@ -102,15 +104,11 @@ public class Progressor extends AsyncTask<Object, Object, Integer>
         return new Integer(result);  // Becomes input to onPostExecute()
     }
 
-    /**
-     * Prepare
-
-
     @Override
     protected void onPreExecute() {
-        this.mp=null;
+        sync=new CountDownLatch(1);
         super.onPreExecute();
-    } */
+    }
 
     /**
      * Update Player scene
@@ -135,9 +133,9 @@ public class Progressor extends AsyncTask<Object, Object, Integer>
         if (((String)values[0]).toLowerCase().equals("video")) {
             //-----------VIDEO COMMAND------------------------
             Uri u=Uri.parse((String) values[1]);
-            StoryEvent se = new StoryEvent(player,EventType.VIDEO,u,0L,40000L);
+            StoryEvent se = new StoryEvent(player,sync,EventType.VIDEO,u,0L,40000L);
             // TEST: Schedule overlay
-            StoryEvent se2= new StoryEvent(player,EventType.PROMPT,R.id.player_overlay,8000,4000);
+            StoryEvent se2= new StoryEvent(player,sync,EventType.PROMPT,R.id.player_overlay,8000,0);
             se.schedule();
             se2.schedule();  // TEST: Schedule overlay
             // setPromptListener(this);

@@ -6,5 +6,5 @@ package com.mobimation.storymaker;
  * A VideoContentEditor manages the editing of a Voice (audio) based Artifact.
  */
 public class VoiceContentEditor extends ContentEditor {
-    private static String TAG = VoiceContentEditor.class.getName();
+    private static final String TAG = VoiceContentEditor.class.getSimpleName();
 }

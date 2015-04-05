@@ -15,7 +15,7 @@ import android.media.MediaPlayer.OnPreparedListener;
 import android.os.Bundle;
 
 public class AudioPlayActivity extends Activity implements OnPreparedListener {
-
+    private static final String TAG = AudioPlayActivity.class.getSimpleName();
     private MediaPlayer mMediaPlayer;
 
     @Override

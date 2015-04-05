@@ -15,7 +15,7 @@ import java.util.TimerTask;
  * operation.
  */
 public class SceneHandler extends Handler {
-    private static String TAG = SceneHandler.class.getName();
+    private static final String TAG = SceneHandler.class.getSimpleName();
     private Timer scheduleTimer;
     private enum State { IDLE, SCHEDULED, RUNNING };
     private State state=State.IDLE;

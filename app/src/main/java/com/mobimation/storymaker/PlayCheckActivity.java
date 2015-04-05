@@ -7,6 +7,7 @@ import android.view.MenuItem;
 
 
 public class PlayCheckActivity extends ActionBarActivity {
+    private static final String TAG = PlayCheckActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

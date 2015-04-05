@@ -7,5 +7,5 @@ package com.mobimation.storymaker;
  * and/or a Story.
  */
 public class Creator {
-    private static String TAG = Creator.class.getName();
+    private static final String TAG = Creator.class.getSimpleName();
 }

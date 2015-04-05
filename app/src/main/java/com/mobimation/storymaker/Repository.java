@@ -7,5 +7,5 @@ package com.mobimation.storymaker;
  * the content that the Creator can use as a basis for assembling a Story.
  */
 public class Repository {
-    private static String TAG = Repository.class.getName();
+    private static final String TAG = Repository.class.getSimpleName();
 }

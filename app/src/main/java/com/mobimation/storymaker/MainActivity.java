@@ -39,7 +39,7 @@ public class MainActivity extends ActionBarActivity implements ViewPager.OnPageC
      * {@link android.support.v4.app.FragmentStatePagerAdapter}.
      */
     SectionsPagerAdapter mSectionsPagerAdapter;
-    private static String TAG = MainActivity.class.getName();
+    private static final String TAG = MainActivity.class.getSimpleName();
     /**
      * The {@link ViewPager} that will host the section contents.
      */
