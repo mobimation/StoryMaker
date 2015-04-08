@@ -9,6 +9,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.TextureView;
 import android.view.View;
 import android.view.ViewStub;
 import android.view.animation.Animation;
@@ -46,7 +47,7 @@ public class StoryEvent
     Uri uri = null;
     Runnable insertion = null;
     Runnable termination = null;
-    VideoView vv = null;
+    TextureView vv = null;
     CountDownLatch sync = null;
     TextView progress = null;
     MediaPlayer mp = null;
@@ -79,7 +80,7 @@ public class StoryEvent
         this.event = this;
         this.sync=sync;
         this.uri = uri;
-        vv = (VideoView) player.findViewById(R.id.video);
+        vv = (TextureView) player.findViewById(R.id.video);
         progress = (TextView) player.findViewById(R.id.progress);
         progress.setVisibility(View.INVISIBLE);
     }
@@ -92,7 +93,7 @@ public class StoryEvent
         this.start = start;
         this.sync=sync;
         this.duration = duration;
-        vv = (VideoView) player.findViewById(R.id.video);
+        vv = (TextureView) player.findViewById(R.id.video);
     }
 
     public void pause() {
@@ -177,10 +178,15 @@ public class StoryEvent
             case VIDEO:
                 Runnable videoInsertion = new Runnable() {
                     @Override
-                    public void run() {
+                    public void run() {  // Thread that launches video playback
                         Log.d(TAG, "Video insertion begins at " + start);
                         //                       final VideoView vv2=vv;
                         Log.d(TAG, "Using URL " + uri.toString());
+                        // TODO: Modify for TextureView + MediaPlayer
+
+
+
+
 
                         vv.setVideoURI(uri);
                         //                   vv2.setOnPreparedListener(event);
