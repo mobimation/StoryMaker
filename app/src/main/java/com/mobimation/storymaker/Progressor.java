@@ -111,11 +111,11 @@ public class Progressor extends AsyncTask<Object, Object, Integer>  {
         if (((String)values[0]).toLowerCase().equals("video")) {
             //-----------VIDEO COMMAND------------------------
             Uri u=Uri.parse((String) values[1]);
-            StoryEvent se = new StoryEvent(player,sync,EventType.VIDEO,u,0L,40000L);
+            StoryEvent se = new StoryEvent(player,sync,EventType.VIDEO,u,0L,0L);
             // TEST: Schedule overlay
-            StoryEvent se2= new StoryEvent(player,sync,EventType.PROMPT,R.id.player_overlay,8000,0);
+ //           StoryEvent se2= new StoryEvent(player,sync,EventType.PROMPT,R.id.player_overlay,8000,0);
             se.schedule();
-            se2.schedule();  // TEST: Schedule overlay
+ //           se2.schedule();  // TEST: Schedule overlay
 
         } //------------END OF VIDEO COMMAND------------------
         else

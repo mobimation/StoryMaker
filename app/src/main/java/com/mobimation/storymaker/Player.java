@@ -44,7 +44,9 @@ public class Player extends Activity
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        setContentView(R.layout.activity_player);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
+
+        setContentView(R.layout.activity_player_w_texture_view);
         RelativeLayout rl=(RelativeLayout)this.findViewById(R.id.FrameLayout1);
         rl.setDrawingCacheEnabled(true);
         // Test run local "promo.sm" test script.

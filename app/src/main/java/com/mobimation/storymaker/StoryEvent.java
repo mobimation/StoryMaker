@@ -3,12 +3,15 @@ package com.mobimation.storymaker;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.SurfaceTexture;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 import android.view.ViewStub;
@@ -70,6 +73,7 @@ public class StoryEvent
     SceneHandler overlayTerminateHandler = new SceneHandler();
     final EventType type;
     int resource = 0;
+    boolean noinit=true;
     private static final String TAG = StoryEvent.class.getSimpleName();
 
     public StoryEvent(Player player, CountDownLatch sync, EventType type, Uri uri, long start, long duration) {
@@ -184,57 +188,58 @@ public class StoryEvent
                         Log.d(TAG, "Using URL " + uri.toString());
                         // TODO: Modify for TextureView + MediaPlayer
 
+                        vv.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
+                            @Override
+                            public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
+                                Log.d(TAG, "onSurfaceTextureAvailable, width=" + width + " height=" + height);
+                                // availableInit();
+                            }
 
+                            @Override
+                            public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
+                                Log.d(TAG, "onSurfaceTextureSizeChanged, width="+width+" height="+height);
+                            }
 
-
-
-                        vv.setVideoURI(uri);
-                        //                   vv2.setOnPreparedListener(event);
-                        vv.requestFocus();
-                        // vv2.start();  // Started by onPrepareHandler
-
-                        vv.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-
-                            public void onPrepared(MediaPlayer mp) {
-                                Log.d(TAG,"onPrepared()");
-                                Float vo = vol(volume);
-                                mp.setVolume(vo, vo);
-                                // progressDialog.dismiss();
-                                if (sync!=null)
-                                    if (sync.getCount()>0L)
-                                        sync.countDown();  // Let loose overlay thread scheduling
-                                vv.start();
-
-                                // Set up a video progress indicator
-                                Animation anim;
-                                anim= AnimationUtils.loadAnimation(player.getApplicationContext(),R.anim.fadein_2s);
-                                // progress.setVisibility(View.VISIBLE);
-                                progress.startAnimation(anim);
-
-                                final Handler m_handler;
-                                m_handler = new Handler();
-                                Runnable onEverySecond=null;
-                                onEverySecond = new Runnable() {
+                            @Override
+                            public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
+                                Log.d(TAG, "onSurfaceTextureDestroyed");
+                                mp.stop();
+                                Log.d(TAG, "Media Player stopped.");
+                                Handler playerReleaseHandler = new Handler();
+                                // Release player with one second delay, avoids app crash TODO: Find out why :)
+                                final Runnable playerRelease = new Runnable() {
                                     @Override
                                     public void run() {
-                                        Long tv=new Long(vv.getCurrentPosition());
-                                        if (vv.isPlaying()) {
-                                            progress.setText(getTimeString(tv));
-                                            m_handler.postDelayed(this, 1000);
-                                        }
+                                        mp.release();
+                                        Log.d(TAG, "Media Player released.");
                                     }
                                 };
-                                m_handler.postDelayed(onEverySecond, 1000);
+                                playerReleaseHandler.postDelayed(playerRelease, 1000L); // Release with delay
+                                return false;
+                            }
+
+                            @Override
+                            public void onSurfaceTextureUpdated(SurfaceTexture surface) {
+                                // Log.d(TAG, "onSurfaceTextureUpdated");
                             }
                         });
+
+                        if (vv.isAvailable())
+                            if (noinit)
+                            availableInit();
+                        else
+                            Log.d(TAG,"Not available");
+
+                        // vv.requestFocus();
+                        // vv2.start();  // Started by onPrepareHandler
 
                         if (duration > 0) {
                             // Schedule termination
                             Runnable videoTermination = new Runnable() {
                                 @Override
                                 public void run() {
-                                    Log.d(TAG, "Video fake stopped at " + start + duration + " milliseconds.");
-                                    // vv2.stopPlayback();
+                                    Log.d(TAG, "Video stops at " + start + duration + " milliseconds.");
+                                    mp.stop();
                                 }
                             };
                             videoTerminateHandler.postDelayed(videoTermination, duration); // Launch with delay
@@ -366,55 +371,92 @@ public class StoryEvent
                 break;
         }
     }
-/*
-    @Override
-    public boolean onError(MediaPlayer mp, int what, int extra) {
-        Log.e(TAG, "onError() what=" + what + " extra=" + extra);
-        return false;
-    }
 
-    @Override
-    public boolean onInfo(MediaPlayer mp, int what, int extra) {
-        Log.d(TAG, "onInfo()  what=" + what + " extra=" + extra);
-        return false;
-    }
-*/
-    /**
-     * Called when the media file is ready for playback.
-     *
-     * @param mp the MediaPlayer that is ready for playback
-     */
-    /*
-    @Override
-    public void onPrepared(MediaPlayer mp) {
-        this.mp=mp;
-        Float vo=vol(volume);
-        mp.setVolume(vo, vo);
-        vv.start();
-        // mp.start();
-        Animation anim;
-        anim= AnimationUtils.loadAnimation(player.getApplicationContext(),R.anim.fadein_2s);
-        // progress.setVisibility(View.VISIBLE);
-        progress.startAnimation(anim);
-
-        // Set up a video progress indicator
-        final Handler m_handler;
-        m_handler = new Handler();
-        Runnable onEverySecond=null;
-        onEverySecond = new Runnable() {
-            @Override
-            public void run() {
-                Long tv=new Long(vv.getCurrentPosition());
-                if (vv.isPlaying()) {
-                    progress.setText(getTimeString(tv));
-                    m_handler.postDelayed(this, 1000);
+    private void availableInit() {
+        SurfaceTexture st = vv.getSurfaceTexture();
+        Surface s = new Surface(st);
+        try {
+            mp = new MediaPlayer();
+            mp.setDataSource(uri.toString());
+            mp.setSurface(s);
+            mp.prepare();
+            mp.setOnBufferingUpdateListener(new MediaPlayer.OnBufferingUpdateListener() {
+                @Override
+                public void onBufferingUpdate(MediaPlayer mp, int percent) {
+                    Log.d(TAG, "onBufferingUpdate(), " + percent + " %");
                 }
-            }
-        };
-        m_handler.postDelayed(onEverySecond, 1000);
-    }
-*/
+            });
+            mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mp) {
+                    Log.d(TAG, "onCompletion()");
+                }
+            });
+            mp.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(final MediaPlayer mp) {
+                    Log.d(TAG, "onPrepared()");
+                    Float vo = vol(volume);
+                    mp.setVolume(vo, vo);
+                    // progressDialog.dismiss();
+                    if (sync != null)
+                        if (sync.getCount() > 0L)
+                            sync.countDown();  // Let loose overlay thread scheduling
+                    mp.start();
+                    // Set up a video progress indicator
+                    Animation anim;
+                    anim = AnimationUtils.loadAnimation(player.getApplicationContext(), R.anim.fadein_2s);
+                    // progress.setVisibility(View.VISIBLE);
+                    progress.startAnimation(anim);
 
+                    final Handler m_handler;
+                    m_handler = new Handler();
+                    Runnable onEverySecond = null;
+                    onEverySecond = new Runnable() {
+                        @Override
+                        public void run() {
+                            int tv = mp.getCurrentPosition();
+                            if (mp.isPlaying()) {
+                                progress.setText(getTimeString(new Long(tv).longValue()));
+                                m_handler.postDelayed(this, 1000);
+                            }
+                        }
+                    };
+                    m_handler.postDelayed(onEverySecond, 1000);
+                }
+            });
+            mp.setOnVideoSizeChangedListener(new MediaPlayer.OnVideoSizeChangedListener() {
+                @Override
+                public void onVideoSizeChanged(MediaPlayer mp, int width, int height) {
+                    Log.d(TAG, "onVideoSizeChanged(), width=" + width + ", height=" + height);
+                }
+            });
+            mp.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+                @Override
+                public boolean onError(MediaPlayer mp, int what, int extra) {
+                    Log.d(TAG, "onError(), what=" + what + ", extra=" + extra);
+                    return false;
+                }
+            });
+            mp.setOnInfoListener(new MediaPlayer.OnInfoListener() {
+                @Override
+                public boolean onInfo(MediaPlayer mp, int what, int extra) {
+                    Log.d(TAG, "onInfo(), what=" + what + ", extra=" + extra);
+                    return false;
+                }
+            });
+            mp.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        } catch (IllegalArgumentException iae) {
+            iae.printStackTrace();
+        } catch (SecurityException se) {
+            se.printStackTrace();
+        } catch (IllegalStateException ise) {
+            ise.printStackTrace();
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
+        }
+        noinit=false;
+    }
     /**
      * Place a ViewStub layouted View on top of the parent View
      * Optionally animate a fade in/out transition
@@ -543,7 +585,7 @@ public class StoryEvent
             }
             @Override
             public void onAnimationEnd(Animation animation) {
-                vv.pause();  // Pause Movie
+                mp.pause();  // Pause Movie
                 inflated.bringToFront();
 
                 // Capture screen
@@ -612,7 +654,7 @@ public class StoryEvent
             // Remove no longer used inflated overlay view
             RelativeLayout rl = (RelativeLayout)player.findViewById(R.id.FrameLayout1);
             rl.removeView(inflated);
-            vv.start();  // Continue paused video
+            mp.start();  // Continue paused video
             }
             @Override
             public void onAnimationRepeat(Animation animation) {

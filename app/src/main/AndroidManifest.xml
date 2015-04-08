@@ -33,6 +33,7 @@
         <activity
             android:name=".Player"
             android:label="@string/title_activity_player"
+            android:hardwareAccelerated="true"
             android:theme="@style/Theme.NoBackground"
             android:screenOrientation="landscape">
         </activity>
