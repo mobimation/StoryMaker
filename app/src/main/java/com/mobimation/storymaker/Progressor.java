@@ -65,19 +65,35 @@ public class Progressor extends AsyncTask<Object, Object, Integer>  {
                 String startTime=tokens.nextToken();
                 // For now skip waiting for start time and go on with operation
                 String opcode=tokens.nextToken();
-                if (opcode.toLowerCase().equals("video")) {  // VIDEO event
-                   String url=tokens.nextToken();
-                   String duration=tokens.nextToken();
-                   publishProgress(opcode,url,startTime,duration); // Run scene command on UI thread
-                   // Returns here immediately
+
+                switch(opcode) {
+                    case "video":
+                        String url=tokens.nextToken();
+                        String duration=tokens.nextToken();
+                        publishProgress(opcode,url,startTime,duration);
+                        break;
+                    case "meme":
+                        String top=tokens.nextToken();
+                        String bottom=tokens.nextToken();
+                        long start=new Long(tokens.nextToken()).longValue();
+                        long duration2=new Long(tokens.nextToken()).longValue();
+                        String image=tokens.nextToken();
+                        publishProgress(opcode,top,bottom,start,duration2,image);
+                        break;
+                    case "prompt":
+                        String promptId=tokens.nextToken();
+                        long start2=new Long(tokens.nextToken()).longValue();
+                        long duration3=new Long(tokens.nextToken()).longValue();
+                        publishProgress(opcode,promptId,start2,duration3);
+                        break;
+                    default:
+                        Log.e(TAG,"Unexpected OPCODE:"+opcode);
                 }
             }
             else
               Log.v(TAG,"Skipping script comment: "+line);
         }
         Log.d(TAG,"-------Script processing done-------");
-        // For testing, hardcode a video playback command, TODO:can be given further arguments
-        // publishProgress("Video","http://www.lilldata.se/suzuki/GT750M-1.flv");
 
         return new Integer(result);  // Becomes input to onPostExecute()
     }
@@ -106,21 +122,21 @@ public class Progressor extends AsyncTask<Object, Object, Integer>  {
      */
     @Override
     protected void onProgressUpdate(Object... values) {
-        // ====== Command interpreter begins
         Log.d(TAG,"onProgressUpdate(): param length="+values.length);
-        if (((String)values[0]).toLowerCase().equals("video")) {
-            //-----------VIDEO COMMAND------------------------
-            Uri u=Uri.parse((String) values[1]);
-            StoryEvent se = new StoryEvent(player,sync,EventType.VIDEO,u,0L,0L);
-            // TEST: Schedule overlay
- //           StoryEvent se2= new StoryEvent(player,sync,EventType.PROMPT,R.id.player_overlay,8000,0);
-            se.schedule();
- //           se2.schedule();  // TEST: Schedule overlay
-
-        } //------------END OF VIDEO COMMAND------------------
-        else
-            Log.e(TAG,"Unexpected OPCODE:"+(String)values[0]);
-        // ====== Command interpreter ends
+        String tag = ((String)values[0]).toLowerCase();
+        switch(tag) {
+            case "video":
+                Uri u=Uri.parse((String) values[1]);
+                StoryEvent se = new StoryEvent(player,sync,EventType.VIDEO,u,0L,0L);
+                se.schedule();
+            break;
+            case "prompt":
+                StoryEvent se2= new StoryEvent(player,sync,EventType.PROMPT,R.id.player_overlay,8000,0);
+                se2.schedule();
+            break;
+            default:
+                Log.e(TAG,"Unexpected OPCODE:"+(String)values[0]);
+        }
 
         super.onProgressUpdate(values);
     }
