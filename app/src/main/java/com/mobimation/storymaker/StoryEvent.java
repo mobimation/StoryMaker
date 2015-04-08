@@ -1,8 +1,13 @@
 package com.mobimation.storymaker;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Environment;
 import android.os.Handler;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewStub;
@@ -13,7 +18,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.VideoView;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
@@ -188,6 +198,27 @@ public class StoryEvent
                                     if (sync.getCount()>0L)
                                         sync.countDown();  // Let loose overlay thread scheduling
                                 vv.start();
+
+                                // Set up a video progress indicator
+                                Animation anim;
+                                anim= AnimationUtils.loadAnimation(player.getApplicationContext(),R.anim.fadein_2s);
+                                // progress.setVisibility(View.VISIBLE);
+                                progress.startAnimation(anim);
+
+                                final Handler m_handler;
+                                m_handler = new Handler();
+                                Runnable onEverySecond=null;
+                                onEverySecond = new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        Long tv=new Long(vv.getCurrentPosition());
+                                        if (vv.isPlaying()) {
+                                            progress.setText(getTimeString(tv));
+                                            m_handler.postDelayed(this, 1000);
+                                        }
+                                    }
+                                };
+                                m_handler.postDelayed(onEverySecond, 1000);
                             }
                         });
 
@@ -391,64 +422,6 @@ public class StoryEvent
      * @return 0=ok
      */
     private void overlay(final int id, final int x, final int y, final long startMs, final long durationMs, final boolean animate) {
-        final Animation.AnimationListener animationInListener
-                = new Animation.AnimationListener() {
-
-            /**
-             * <p>Notifies the start of the animation.</p>
-             *
-             * @param animation The started animation.
-             */
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation arg0) {
-                Log.d(TAG, "AnimIn");
-                vv.pause();
-            }
-
-            /**
-             * <p>Notifies the repetition of the animation.</p>
-             *
-             * @param animation The animation which was repeated.
-             */
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        };
-        final Animation.AnimationListener animationOutListener
-                = new Animation.AnimationListener() {
-
-            /**
-             * <p>Notifies the start of the animation.</p>
-             *
-             * @param animation The started animation.
-             */
-            @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animation arg0) {
-                Log.d(TAG, "AnimOut");
-                vv.start();
-            }
-
-            /**
-             * <p>Notifies the repetition of the animation.</p>
-             *
-             * @param animation The animation which was repeated.
-             */
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        };
 
         final Runnable overlayInsertion = new Runnable() {
             @Override
@@ -491,6 +464,68 @@ public class StoryEvent
         Log.d(TAG, "Overlay scheduled.");
     }
 
+    private static void loadBitmapFromView(Context context, android.view.View v) {
+        DisplayMetrics dm = context.getResources().getDisplayMetrics();
+        v.measure(View.MeasureSpec.makeMeasureSpec(dm.widthPixels, View.MeasureSpec.EXACTLY),
+                View.MeasureSpec.makeMeasureSpec(dm.heightPixels, View.MeasureSpec.EXACTLY));
+        v.layout(0, 0, v.getMeasuredWidth(), v.getMeasuredHeight());
+        Bitmap returnedBitmap = Bitmap.createBitmap(v.getMeasuredWidth(),
+                v.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
+//        Canvas c = new Canvas(returnedBitmap);
+//        v.draw(c);
+
+        takeScreen(returnedBitmap);
+    }
+
+    private static void saveImage(Bitmap bitmap) throws IOException{
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 40, bytes);
+        File f = new File(Environment.getExternalStorageDirectory() + File.separator + "snapshot.png");
+        f.createNewFile();
+        FileOutputStream fo = new FileOutputStream(f);
+        fo.write(bytes.toByteArray());
+        fo.close();
+    }
+
+    private static Bitmap captureScreen(View v) {
+        Bitmap screenshot = null;
+        try {
+            if(v!=null) {
+                screenshot = Bitmap.createBitmap(v.getMeasuredWidth(),v.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
+                Canvas canvas = new Canvas(screenshot);
+                v.draw(canvas);
+            }
+        }catch (Exception e){
+            Log.d("ScreenShotActivity", "Failed to capture screenshot because:" + e.getMessage());
+        }
+        return screenshot;
+    }
+
+
+    private static void takeScreen(Bitmap bitmap) {
+        //Bitmap bitmap = ImageUtils.loadBitmapFromView(this, view); //get Bitmap from the view
+        String mPath = Environment.getExternalStorageDirectory() + File.separator + "screen_" + System.currentTimeMillis() + ".jpeg";
+        File imageFile = new File(mPath);
+        OutputStream fout=null;
+        try {
+            fout = new FileOutputStream(imageFile);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 90, fout);
+            fout.flush();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        finally {
+          try {
+              fout.close();
+          }
+          catch (IOException ioe) {
+              ioe.printStackTrace();
+          }
+        }
+    }
+
     private void fadeIn (final View inflated) {
         // Run animation to fade in overlay
         Animation anim;
@@ -504,6 +539,25 @@ public class StoryEvent
             public void onAnimationEnd(Animation animation) {
                 vv.pause();  // Pause Movie
                 inflated.bringToFront();
+
+                // Capture screen
+                final RelativeLayout rl=(RelativeLayout)player.findViewById(R.id.FrameLayout1);
+                rl.post(new Runnable() {
+                    public void run() {
+                        //take screenshot
+                        Bitmap myBitmap = captureScreen(rl);
+                        try {
+                            if (myBitmap != null) {
+                                //save image to SD card
+                                saveImage(myBitmap);
+                            }
+                        } catch (IOException e) {
+                            // TODO Auto-generated catch block
+                            e.printStackTrace();
+                        }
+                    }
+                });
+
                 // Set up button handling so user can reply to question
                 Button b1=(Button) inflated.findViewById(R.id.b1);
                 Button bx=(Button) inflated.findViewById(R.id.bx);

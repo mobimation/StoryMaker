@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.RelativeLayout;
 import android.widget.VideoView;
 
 /**
@@ -44,7 +45,8 @@ public class Player extends Activity
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         setContentView(R.layout.activity_player);
-
+        RelativeLayout rl=(RelativeLayout)this.findViewById(R.id.FrameLayout1);
+        rl.setDrawingCacheEnabled(true);
         // Test run local "promo.sm" test script.
         new Progressor().execute(this,new Script(this,R.raw.promo));
     }
