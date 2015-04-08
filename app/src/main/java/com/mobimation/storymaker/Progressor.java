@@ -26,43 +26,21 @@ import java.util.concurrent.TimeUnit;
  * Progressor accomplishes the aggregated progression of scenes that make up a story.
  * Here a Scene means the playback of one media type with a start time and duration
  * and optionally some transition and interactivity effects.
- * TODO: The Progressor is supposed to direct media playback while interpreting a Storymaker
- * TODO: script. This needs to be done by posting commands onto the Activity UI thread.
- * TODO: Let´ see how well this works.
  *
  */
-public class Progressor extends AsyncTask<Object, Object, Integer>
-        implements  MediaPlayer.OnPreparedListener,
-                    MediaPlayer.OnErrorListener,
-                    MediaPlayer.OnInfoListener,
-                    PromptResponse {
+public class Progressor extends AsyncTask<Object, Object, Integer>  {
+
     private static final String TAG = Progressor.class.getSimpleName();
-    VideoView vv;      // The video player view
     CountDownLatch sync=null;  // Video ready synchronization
     int volume=0;
     Player player;     // The player
     TextView progress; // Video playback progress indicator
     Script script;     // The script we are processing
-    private PromptResponse promptListener;
 
-    public void setPromptListener(PromptResponse listener) {
-        promptListener=listener;
-    }
-/*
-    // Optional constructor that declare two parameters
-    public Progressor(Player p, Script script) {
-        this.player=p;
-        vv=(VideoView)p.findViewById(R.id.video);
-        this.script=script;
-    }
-*/
     protected Integer doInBackground(Object... params) {
         // Process StoryMaker script
-        setPromptListener(this);
         this.player=(Player)params[0];
-        vv=(VideoView)player.findViewById(R.id.video);
         this.script=(Script)params[1];
-        // progress=(TextView)player.findViewById(R.id.progress);
         int result=0;
         String line;
         Log.d(TAG,"Script has "+script.lines()+" lines.");
@@ -106,7 +84,7 @@ public class Progressor extends AsyncTask<Object, Object, Integer>
 
     @Override
     protected void onPreExecute() {
-        sync=new CountDownLatch(1);
+        sync=new CountDownLatch(1);  // Overlay threads to wait for video prepared
         super.onPreExecute();
     }
 
@@ -138,31 +116,6 @@ public class Progressor extends AsyncTask<Object, Object, Integer>
             StoryEvent se2= new StoryEvent(player,sync,EventType.PROMPT,R.id.player_overlay,8000,0);
             se.schedule();
             se2.schedule();  // TEST: Schedule overlay
-            // setPromptListener(this);
-            // se2.schedule();
-
-            // ------Launch video overlay--------------------
-            // olabel("test", 0, 0, 0, 0L, true);
-/*
-            // ------Launch video progress indicator---------
-            final Handler m_handler;
-            m_handler = new Handler();
-            Runnable onEverySecond=null;
-            onEverySecond = new Runnable() {
-                @Override
-                public void run() {
-                        Log.d(TAG,"progress..");  // TODO: Timing: this delay makes indication consistent..
-                        Long tv=new Long(vv.getCurrentPosition());
-                        if (vv.isPlaying()) {
-                            progress.setText(getTimeString(tv));
-                            m_handler.postDelayed(this, 1000);
-                        }
-                }
-            };
-           m_handler.postDelayed(onEverySecond, 1000);
-            */
-     //       progress.postDelayed(onEverySecond, 1000);
-            // -----End of video progress indicator launch----
 
         } //------------END OF VIDEO COMMAND------------------
         else
@@ -177,88 +130,5 @@ public class Progressor extends AsyncTask<Object, Object, Integer>
      */
     protected void onPostExecute(Integer result) {
         Log.d(TAG,"onPostExecute() result="+result);
-    }
-
-    /**
-     * We arrive here when video is ready to begin playing
-     * @param mp
-     */
-    @Override
-    public void onPrepared(MediaPlayer mp) {
-       Float vo=vol(volume);
-       mp.setVolume(vo, vo);
-       vv.start();
-    }
-
-    static String getTimeString(Long millis) {
-       return String.format("%02d:%02d:%02d",
-            TimeUnit.MILLISECONDS.toHours(millis),
-            TimeUnit.MILLISECONDS.toMinutes(millis) -
-                    TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millis)),
-            TimeUnit.MILLISECONDS.toSeconds(millis) -
-                    TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis)));
-    }
-    // Return a logarithmic MediaPlayer audio volume from a linear audio volume 0-100
-    float vol(int value) {
-        return 1-(float)(Math.log(100-value)/Math.log(100));
-    }
-
-
-    @Override
-    public boolean onError(MediaPlayer mp, int what, int extra) {
-        Log.e(TAG,"onError() what="+what+" extra="+extra);
-        return false;
-    }
-
-    @Override
-    public boolean onInfo(MediaPlayer mp, int what, int extra) {
-        Log.d(TAG,"onInfo()  what="+what+" extra="+extra);
-        return false;
-    }
-
-    /**
-     *
-     * Schedule placing a label on top of the parent View
-     * Optionally animate a fade in/out transition
-     *
-     * @param text          Text label to be displayed
-     * @param x             Horizontal start in percentage of parent width
-     * @param y             Vertical start in percentage of parent height
-     * @param startMs       Delay in ms until start from calling this method 0=immediately
-     * @param durationMs    Duration in ms until taken down 0=permanent
-     * @param animate       true=fade in/out false=no animation
-     * @return              0=ok
-     */
-    private void olabel(String text, int x, int y,int startMs, long durationMs, boolean animate) {
-        // On demand (lazy) inflating of a layout
-        TextView tv;
-        ViewStub stub = (ViewStub) player.findViewById(R.id.player_overlay);
-        View inflated = stub.inflate();
-
-        inflated.setVisibility(View.VISIBLE);
-    }
-
-    /**
-     * Schedule a StoryEvent insertion.
-     * During interpretation of a script any StoryEvent that occurs are scheduled
-     * to be carried out at a certain point in time. When that time is reached
-     * a handler for the type of effect is launched to manage the playback
-     * of the particular type of event.
-     * @param event
-     */
-    private void schedule(StoryEvent event) {
-
-    }
-
-    /**
-     *
-     * @param value Generic type, here we expect an int value.
-     */
-    @Override
-    public void promptResponse(Object... value) {
-        if (value.length>0) {
-            int i=((Integer)value[0]).intValue();
-            Log.d(TAG,"Prompt response="+i);
-        }
     }
 }
