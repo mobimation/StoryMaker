@@ -8,4 +8,5 @@ package com.mobimation.storymaker;
  */
 public class Cut {
     private static final String TAG = Cut.class.getSimpleName();
+
 }

@@ -175,7 +175,9 @@ public class StoryEvent
     }
 
     /**
-     * schedule() will launch and optionally terminate a media insertion
+     * schedule() will schedule a thread to run in the future,
+     * with a purpose to launch and optionally take down a piece of media playback
+     * part of a multithreaded scene.
      */
     public void schedule() {
         switch (type) {
@@ -183,73 +185,74 @@ public class StoryEvent
                 Runnable videoInsertion = new Runnable() {
                     @Override
                     public void run() {  // Thread that launches video playback
-                        Log.d(TAG, "Video insertion begins at " + start);
-                        //                       final VideoView vv2=vv;
-                        Log.d(TAG, "Using URL " + uri.toString());
-                        // TODO: Modify for TextureView + MediaPlayer
+                    Log.d(TAG, "Video insertion begins at " + start);
+                     //                       final VideoView vv2=vv;
+                    Log.d(TAG, "Using URL " + uri.toString());
+                     // TODO: Modify for TextureView + MediaPlayer
 
-                        vv.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
-                            @Override
-                            public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
-                                Log.d(TAG, "onSurfaceTextureAvailable, width=" + width + " height=" + height);
-                                // availableInit();
-                            }
+                    vv.setSurfaceTextureListener(new TextureView.SurfaceTextureListener() {
+                        @Override
+                        public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
+                            Log.d(TAG, "onSurfaceTextureAvailable, width=" + width + " height=" + height);
+                             // availableInit();
+                        }
 
-                            @Override
-                            public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
-                                Log.d(TAG, "onSurfaceTextureSizeChanged, width="+width+" height="+height);
-                            }
+                        @Override
+                        public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
+                            Log.d(TAG, "onSurfaceTextureSizeChanged, width="+width+" height="+height);
+                        }
 
-                            @Override
-                            public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
-                                Log.d(TAG, "onSurfaceTextureDestroyed");
-                                mp.stop();
-                                Log.d(TAG, "Media Player stopped.");
-                                Handler playerReleaseHandler = new Handler();
-                                // Release player with one second delay, avoids app crash TODO: Find out why :)
-                                final Runnable playerRelease = new Runnable() {
-                                    @Override
+                        @Override
+                        public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
+                            Log.d(TAG, "onSurfaceTextureDestroyed");
+                            mp.stop();
+                            Log.d(TAG, "Media Player stopped.");
+                            Handler playerReleaseHandler = new Handler();
+                            // Release player with one second delay, avoids app crash TODO: Find out why :)
+                            final Runnable playerRelease = new Runnable() {
+                                @Override
                                     public void run() {
                                         mp.release();
                                         Log.d(TAG, "Media Player released.");
                                     }
-                                };
-                                playerReleaseHandler.postDelayed(playerRelease, 1000L); // Release with delay
-                                return false;
-                            }
+                            };
+                            playerReleaseHandler.postDelayed(playerRelease, 1000L); // Release with delay
+                            return false;
+                        }
 
-                            @Override
-                            public void onSurfaceTextureUpdated(SurfaceTexture surface) {
-                                // Log.d(TAG, "onSurfaceTextureUpdated");
-                            }
-                        });
+                        @Override
+                        public void onSurfaceTextureUpdated(SurfaceTexture surface) {
+                           // Log.d(TAG, "onSurfaceTextureUpdated");
+                        }
+                    });
 
-                        if (vv.isAvailable())
-                            if (noinit)
+                    if (vv.isAvailable())
+                        if (noinit)
                             availableInit();
                         else
                             Log.d(TAG,"Not available");
 
-                        // vv.requestFocus();
-                        // vv2.start();  // Started by onPrepareHandler
+                    // vv.requestFocus();
+                    // vv2.start();  // Started by onPrepareHandler
 
-                        if (duration > 0) {
-                            // Schedule termination
-                            Runnable videoTermination = new Runnable() {
-                                @Override
-                                public void run() {
-                                    Log.d(TAG, "Video stops at " + start + duration + " milliseconds.");
-                                    mp.stop();
-                                }
-                            };
-                            videoTerminateHandler.postDelayed(videoTermination, duration); // Launch with delay
-                            Log.d(TAG, "Video termination with " + duration + " millisecond delay.");
-                            termination = videoTermination;
-                        } else
-                            Log.d(TAG, "No video termination");
+                    if (duration > 0) {
+                        // Schedule termination
+                        Runnable videoTermination = new Runnable() {
+                            @Override
+                            public void run() {
+                                Log.d(TAG, "Video stops at " + start + duration + " milliseconds.");
+                                mp.stop();
+                            }
+                        };
+                        videoTerminateHandler.postDelayed(videoTermination, duration); // Launch with delay >=0
+                        Log.d(TAG, "Video termination to occur after " + duration + " millisecond delay.");
+                        termination = videoTermination;
+                    }
+                    else
+                        Log.d(TAG, "No video termination");
                     }
                 };
-                videoInsertionHandler.postDelayed(videoInsertion, start); // Launch with delay
+                videoInsertionHandler.postDelayed(videoInsertion, start); // Launch with delay >=0
                 insertion = videoInsertion;
                 Log.d(TAG, "Video scheduled.");
                 break;
@@ -258,8 +261,8 @@ public class StoryEvent
                 final Runnable audioInsertion = new Runnable() {
                     @Override
                     public void run() {
-                        videoWait(type);
-                        Log.d(TAG, "Audio insertion begins");
+                    videoWait(type);
+                    Log.d(TAG, "Audio insertion begins");
                         // TODO: Add playback launch
                         if (duration > 0) {
                             // Schedule termination
@@ -372,6 +375,9 @@ public class StoryEvent
         }
     }
 
+    /**
+     * Initiate video playback using a SurfaceView and MediaPlayer
+     */
     private void availableInit() {
         SurfaceTexture st = vv.getSurfaceTexture();
         Surface s = new Surface(st);
@@ -512,6 +518,11 @@ public class StoryEvent
         Log.d(TAG, "Overlay scheduled.");
     }
 
+    /**
+     * Code exmple that is supposed to capture a View into a Bitmap
+     * @param context
+     * @param v Root view of content to capture
+     */
     private static void loadBitmapFromView(Context context, android.view.View v) {
         DisplayMetrics dm = context.getResources().getDisplayMetrics();
         v.measure(View.MeasureSpec.makeMeasureSpec(dm.widthPixels, View.MeasureSpec.EXACTLY),
@@ -525,31 +536,10 @@ public class StoryEvent
         takeScreen(returnedBitmap);
     }
 
-    private static void saveImage(Bitmap bitmap) throws IOException{
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 40, bytes);
-        File f = new File(Environment.getExternalStorageDirectory() + File.separator + "snapshot.png");
-        f.createNewFile();
-        FileOutputStream fo = new FileOutputStream(f);
-        fo.write(bytes.toByteArray());
-        fo.close();
-    }
-
-    private static Bitmap captureScreen(View v) {
-        Bitmap screenshot = null;
-        try {
-            if(v!=null) {
-                screenshot = Bitmap.createBitmap(v.getMeasuredWidth(),v.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
-                Canvas canvas = new Canvas(screenshot);
-                v.draw(canvas);
-            }
-        }catch (Exception e){
-            Log.d("ScreenShotActivity", "Failed to capture screenshot because:" + e.getMessage());
-        }
-        return screenshot;
-    }
-
-
+    /**
+     * Code that saves a Bitmap to a file
+     * @param bitmap
+     */
     private static void takeScreen(Bitmap bitmap) {
         //Bitmap bitmap = ImageUtils.loadBitmapFromView(this, view); //get Bitmap from the view
         String mPath = Environment.getExternalStorageDirectory() + File.separator + "screen_" + System.currentTimeMillis() + ".jpeg";
@@ -574,6 +564,10 @@ public class StoryEvent
         }
     }
 
+    /**
+     * Fade in an inflated view part of the FrameLayout1 hierarchy.
+     * @param inflated
+     */
     private void fadeIn (final View inflated) {
         // Run animation to fade in overlay
         Animation anim;
@@ -640,6 +634,12 @@ public class StoryEvent
         inflated.startAnimation(anim);
         inflated.requestFocus();
     }
+
+    /**
+     * Fade out and free resources of the inflated view represented by a ViewStub
+     * part of the FrameLayout1 hierarchy.
+     * @param inflated
+     */
     private void fadeOut(final View inflated) {
         // Run animation to fade out overlay
         Animation anim;
@@ -662,7 +662,46 @@ public class StoryEvent
         });
         inflated.startAnimation(anim);
     }
-    // Return a logarithmic MediaPlayer audio volume from a linear audio volume 0-100
+
+    /**
+     * Save Bitmap as JPG to file
+     * @param bitmap
+     * @throws IOException
+     */
+    private static void saveImage(Bitmap bitmap) throws IOException{
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 40, bytes);
+        File f = new File(Environment.getExternalStorageDirectory() + File.separator + "snapshot.png");
+        f.createNewFile();
+        FileOutputStream fo = new FileOutputStream(f);
+        fo.write(bytes.toByteArray());
+        fo.close();
+    }
+
+    /**
+     * Capture Bitmap from a view
+     * @param v Root view of content to capture
+     * @return  Bitmap containing what was captured
+     */
+    private static Bitmap captureScreen(View v) {
+        Bitmap screenshot = null;
+        try {
+            if(v!=null) {
+                screenshot = Bitmap.createBitmap(v.getMeasuredWidth(),v.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
+                Canvas canvas = new Canvas(screenshot);
+                v.draw(canvas);
+            }
+        }catch (Exception e){
+            Log.d("ScreenShotActivity", "Failed to capture screenshot because:" + e.getMessage());
+        }
+        return screenshot;
+    }
+
+    /**
+     * Return a logarithmic MediaPlayer audio volume from a linear audio volume 0-100
+     * @param value
+     * @return float value
+     */
     private float vol(int value) {
         return 1 - (float) (Math.log(100 - value) / Math.log(100));
     }
@@ -687,6 +726,11 @@ public class StoryEvent
           Log.e(TAG,"videoWait() - sync is NULL");
     }
 
+    /**
+     * Return a formatted time representation of a millisecond value
+     * @param millis
+     * @return String
+     */
     private static String getTimeString(Long millis) {
         return String.format("%02d:%02d:%02d",
                 TimeUnit.MILLISECONDS.toHours(millis),

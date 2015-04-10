@@ -1,12 +1,10 @@
 package com.mobimation.storymaker;
 
-import android.app.Activity;
-import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.net.Uri;
-import android.support.v7.app.ActionBarActivity;
+import android.graphics.drawable.BitmapDrawable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.os.Bundle;
@@ -17,18 +15,16 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.VideoView;
-
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
 
 /**
- * Main activity of the StoryMaker app.
+ * Main navigation activity of the StoryMaker app.
+ * A ViewPager is used for accomplishing a sideways swipe action
  */
-public class MainActivity extends ActionBarActivity implements ViewPager.OnPageChangeListener{
+public class MainActivity extends FragmentActivity implements ViewPager.OnPageChangeListener{
 
     /**
      * The {@link android.support.v4.view.PagerAdapter} that will provide
@@ -48,8 +44,12 @@ public class MainActivity extends ActionBarActivity implements ViewPager.OnPageC
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main_layout);
+        // Set fullscreen
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
+        setContentView(R.layout.main_layout);
         // b.setOnClickListener();
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
@@ -62,9 +62,7 @@ public class MainActivity extends ActionBarActivity implements ViewPager.OnPageC
 
         mViewPager.setAdapter(mSectionsPagerAdapter);
         mViewPager.setOnPageChangeListener(this);
-
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -90,7 +88,7 @@ public class MainActivity extends ActionBarActivity implements ViewPager.OnPageC
 
     @Override
     public void onPageScrolled(int i, float v, int i2) {
-
+        Log.d(TAG,"onPageScrolled(),i="+i+" v="+v+" i2="+i2);
     }
 
     @Override
@@ -98,22 +96,24 @@ public class MainActivity extends ActionBarActivity implements ViewPager.OnPageC
         Log.d(TAG, "onPageSelected() - page=" + i);
         switch (i) {
             case 0:
-                pageIndicator.setText("Abc");
+                pageIndicator.setText("Abcd");
                 break;
             case 1:
-                pageIndicator.setText("aBc");
+                pageIndicator.setText("aBcd");
                 break;
             case 2:
-                pageIndicator.setText("abC");
+                pageIndicator.setText("abCd");
+                break;
+            case 3:
+                pageIndicator.setText("abcD");
                 break;
         }
     }
 
     @Override
     public void onPageScrollStateChanged(int i) {
-
+        Log.d(TAG,"onPageScrollStateChanged(), i="+i);
     }
-
 
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
@@ -130,22 +130,25 @@ public class MainActivity extends ActionBarActivity implements ViewPager.OnPageC
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
             Log.d("SectionsPagerAdapter", "getItem() - position=" + position+1);
+
+            // The sliding pages and their positions:
             switch (position) {
                 case 0:
                     return PlayLaunchFragment.newInstance(position+1);
                 case 1:
-                    // return PlaceholderFragment.newInstance(position + 1);
-                    return PlaceholderFragment.newInstance(position+1);
+                    return TextRecorderLaunchFragment.newInstance(position+1);
                 case 2:
-                    return TimelineFragment.newInstance(position+1);
+                    return PhotoRecorderLaunchFragment.newInstance(position+1);
+                case 3:
+                    return StoriesFragment.newInstance(position+1);
             }
-            return PlaceholderFragment.newInstance(position+1);
+            return PlayLaunchFragment.newInstance(position+1);
         }
 
         @Override
         public int getCount() {
-            // Show 3 total pages.
-            return 3;
+            // Total pages.
+            return 4;
         }
 
 
@@ -154,21 +157,26 @@ public class MainActivity extends ActionBarActivity implements ViewPager.OnPageC
             Log.d("SectionsPagerAdapter", "getPageTitle() - position=" + position);
             switch (position) {
                 case 0:
-                    pageIndicator.setText("Abc");
-                    return "Abc";
+                    pageIndicator.setText("Abcd");
+                    return "Abcd";
                 case 1:
-                    pageIndicator.setText("aBc");
-                    return "aBc";
+                    pageIndicator.setText("aBcd");
+                    return "aBcd";
                 case 2:
-                    pageIndicator.setText("abC");
-                    return "abC";
+                    pageIndicator.setText("abCd");
+                    return "abCd";
+                case 3:
+                    pageIndicator.setText("abcD");
+                    return "abcD";
             }
             return null;
         }
     }
 
-    /**
-     * A placeholder fragment containing a simple view.
+    /*********************************************************************************************
+     * Player launch page
+     * TODO: Player is for test right now.
+     * TODO: Needs to be part of the Stories list for editing a new or existing story
      */
     public static class PlayLaunchFragment extends Fragment {
         /**
@@ -195,8 +203,9 @@ public class MainActivity extends ActionBarActivity implements ViewPager.OnPageC
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            final View rootView = inflater.inflate(R.layout.fragment_play, container, false);
-            final Button b= (Button)rootView.findViewById(R.id.buttonVideoPlay);
+            final View rootView = inflater.inflate(R.layout.fragment_player_launcher, container, false);
+
+            final Button b= (Button)rootView.findViewById(R.id.buttonPlayerLaunch);
             b.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -207,10 +216,12 @@ public class MainActivity extends ActionBarActivity implements ViewPager.OnPageC
         }
     }
 
-    /**
-     * A placeholder fragment containing a simple view.
+    /*********************************************************************************************
+     * Text Recorder launch page
+     * TODO: This page needs to be a list of text artifacts. On the page needs to
+     * TODO: exist a button to launch input of a new text artifact.
      */
-    public static class PlaceholderFragment extends Fragment {
+    public static class TextRecorderLaunchFragment extends Fragment {
         /**
          * The fragment argument representing the section number for this
          * fragment.
@@ -221,21 +232,21 @@ public class MainActivity extends ActionBarActivity implements ViewPager.OnPageC
          * Returns a new instance of this fragment for the given section
          * number.
          */
-        public static PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment fragment = new PlaceholderFragment();
+        public static TextRecorderLaunchFragment newInstance(int sectionNumber) {
+            TextRecorderLaunchFragment fragment = new TextRecorderLaunchFragment();
             Bundle args = new Bundle();
             args.putInt(ARG_SECTION_NUMBER, sectionNumber);
             fragment.setArguments(args);
             return fragment;
         }
 
-        public PlaceholderFragment() {
+        public TextRecorderLaunchFragment() {
         }
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            final View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+            final View rootView = inflater.inflate(R.layout.fragment_textrecorder_launcher, container, false);
             final Button b= (Button)rootView.findViewById(R.id.buttonTextRecorderLaunch);
             b.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -251,11 +262,55 @@ public class MainActivity extends ActionBarActivity implements ViewPager.OnPageC
         return Typeface.createFromAsset(getAssets(), fontName);
     }
 
+    /*********************************************************************************************
+     * Photo Recorder launch page.
+     * TODO: This page should list all photos, own and others. There should be a
+     * TODO: button on that page to launch taking a new photo.
+     */
+    public static class PhotoRecorderLaunchFragment extends Fragment {
+        /**
+         * The fragment argument representing the section number for this
+         * fragment.
+         */
+        private static final String ARG_SECTION_NUMBER = "section_number";
 
-    /**
-    * A placeholder fragment containing a simple view.
-    */
-    public static class TimelineFragment extends Fragment {
+        /**
+         * Returns a new instance of this fragment for the given section
+         * number.
+         */
+        public static PhotoRecorderLaunchFragment newInstance(int sectionNumber) {
+            PhotoRecorderLaunchFragment fragment = new PhotoRecorderLaunchFragment();
+            Bundle args = new Bundle();
+            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
+            fragment.setArguments(args);
+            return fragment;
+        }
+
+        public PhotoRecorderLaunchFragment() {
+        }
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+            final View rootView = inflater.inflate(R.layout.fragment_photos_launcher, container, false);
+            rootView.setBackground((BitmapDrawable)getResources().getDrawable(R.drawable.recording_phone));
+            final Button b= (Button)rootView.findViewById(R.id.buttonPhotoRecorderLaunch);
+            b.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(new Intent(getActivity(), PhotoRecorder.class));
+                }
+            });
+            return rootView;
+        }
+    }
+
+
+
+    /*********************************************************************************************
+     * Timeline launch page.
+     */
+    public static class StoriesFragment extends Fragment {
     /**
      * The fragment argument representing the section number for this
      * fragment.
@@ -268,29 +323,31 @@ public class MainActivity extends ActionBarActivity implements ViewPager.OnPageC
         * Returns a new instance of this fragment for the given section
         * number.
          */
-        public static TimelineFragment newInstance(int sectionNumber) {
-         Log.d("TimelineFragment","sectionNumber="+sectionNumber);
-         TimelineFragment fragment = new TimelineFragment();
+        public static StoriesFragment newInstance(int sectionNumber) {
+         Log.d("StoriesFragment","sectionNumber="+sectionNumber);
+         StoriesFragment fragment = new StoriesFragment();
          Bundle args = new Bundle();
          args.putInt(ARG_SECTION_NUMBER, sectionNumber);
          fragment.setArguments(args);
          return fragment;
         }
 
-        public TimelineFragment() {
-            Log.d("TimelineFragment", "constructor");
+        public StoriesFragment() {
+            Log.d("StoriesFragment", "constructor");
         }
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-            Log.d("TimelineFragment","onCreateView()");
-            rootView = inflater.inflate(R.layout.fragment_timeline, container, false);
-            final Button b= (Button)rootView.findViewById(R.id.buttonTimeline);
+            Log.d("StoriesFragment","onCreateView()");
+            rootView = inflater.inflate(R.layout.fragment_stories_launcher, container, false);
+            final Button b= (Button)rootView.findViewById(R.id.buttonStoriesLaunch);
+            // TODO: Story page should show list of stories, own and received.
+            // TODO: Starting the editor for a new story should be a button on that page.
             b.setOnClickListener(new View.OnClickListener() {
                @Override
               public void onClick(View view) {
-                  startActivity(new Intent(getActivity(), TimelineEditorActivity.class));
+                  startActivity(new Intent(getActivity(), StoryEditorActivity.class));
               }
             });
             return rootView;

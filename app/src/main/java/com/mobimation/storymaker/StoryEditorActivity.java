@@ -6,9 +6,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 
-public class TimelineEditorActivity extends ActionBarActivity {
+public class StoryEditorActivity extends ActionBarActivity {
 
-    private static final String TAG = TimelineEditorActivity.class.getSimpleName();
+    private static final String TAG = StoryEditorActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

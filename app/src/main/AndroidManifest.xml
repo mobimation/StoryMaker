@@ -3,7 +3,7 @@
     package="com.mobimation.storymaker" >
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -27,15 +27,15 @@
         <activity android:name=".VoiceRecorder" />
         <activity android:name=".VideoRecorder" />
         <activity
-            android:name=".TimelineEditorActivity"
+            android:name=".StoryEditorActivity"
             android:label="@string/title_activity_timeline_editor" >
         </activity>
         <activity
             android:name=".Player"
-            android:label="@string/title_activity_player"
             android:hardwareAccelerated="true"
-            android:theme="@style/Theme.NoBackground"
-            android:screenOrientation="landscape">
+            android:label="@string/title_activity_player"
+            android:screenOrientation="landscape"
+            android:theme="@style/Theme.NoBackground" >
         </activity>
         <activity
             android:name=".PlayCheckActivity"
@@ -44,6 +44,12 @@
         <activity
             android:name=".AudioPlayActivity"
             android:label="@string/title_activity_audio_play" >
+        </activity>
+        <activity
+            android:name=".PhotoRecorder"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_camera"
+            android:theme="@style/FullscreenTheme" >
         </activity>
     </application>
 

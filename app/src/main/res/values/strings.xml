@@ -19,4 +19,6 @@
     <string name="title_activity_play_check">PlayCheckActivity</string>
     <string name="title_activity_progressor">Progressor</string>
     <string name="title_activity_audio_play">AudioPlayActivity</string>
+
+    <string name="title_activity_camera">Camera</string>
 </resources>
