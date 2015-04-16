@@ -385,7 +385,7 @@ public class StoryEvent
             mp = new MediaPlayer();
             mp.setDataSource(uri.toString());
             mp.setSurface(s);
-            mp.prepare();
+            mp.prepareAsync();
             mp.setOnBufferingUpdateListener(new MediaPlayer.OnBufferingUpdateListener() {
                 @Override
                 public void onBufferingUpdate(MediaPlayer mp, int percent) {
