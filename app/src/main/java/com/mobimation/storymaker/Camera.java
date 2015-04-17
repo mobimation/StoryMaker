@@ -11,6 +11,8 @@ import java.util.List;
 /**
  * Camera related operations. The capture of camera images for the manufacturing of
  * various photo artifacts used in Story production.
+ * TODO: An attempt here to use only the Camera2 API for Android 5 upwards
+ * TODO: while earlier Android build levels use the old API.
  *
  * Created by gunnarforsgren on 15-04-14.
  */
