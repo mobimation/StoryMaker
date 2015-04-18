@@ -14,7 +14,7 @@
         android:layout_marginLeft="0dp"
         android:layout_alignParentTop="true"
         android:layout_marginTop="0dp"
-        android:text="Abcd" />
+        android:text="Abcde" />
 
     <android.support.v4.view.ViewPager android:id="@+id/pager"
         android:layout_width="wrap_content"

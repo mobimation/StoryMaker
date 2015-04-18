@@ -2,7 +2,6 @@ package com.mobimation.storymaker;
 
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.graphics.drawable.BitmapDrawable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -303,7 +302,7 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             final View rootView = inflater.inflate(R.layout.fragment_photos_launcher, container, false);
-            rootView.setBackground((BitmapDrawable)getResources().getDrawable(R.drawable.recording_phone));
+            rootView.setBackground(getResources().getDrawable(R.drawable.recording_phone));
             final Button b= (Button)rootView.findViewById(R.id.buttonPhotoRecorderLaunch);
             b.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -397,7 +396,7 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             Log.d("RangeSeekBarFragment","onCreateView()");
-            rootView = inflater.inflate(R.layout.fragment_stories_launcher, container, false);
+            rootView = inflater.inflate(R.layout.fragment_range_seek_bar_demo_launcher, container, false);
             final Button b= (Button)rootView.findViewById(R.id.buttonRangeSeekBarDemoLaunch);
             b.setOnClickListener(new View.OnClickListener() {
                 @Override
