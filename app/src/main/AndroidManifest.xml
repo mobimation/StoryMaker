@@ -51,6 +51,10 @@
             android:label="@string/title_activity_camera"
             android:theme="@style/FullscreenTheme" >
         </activity>
+        <activity
+            android:name="com.yahoo.mobile.client.android.util.RangeSeekBarDemoActivity"
+            android:label="@string/title_activity_range_seek_bar_demo" >
+        </activity>
     </application>
 
 </manifest>

@@ -21,4 +21,7 @@
     <string name="title_activity_audio_play">AudioPlayActivity</string>
 
     <string name="title_activity_camera">Camera</string>
+    <string name="demo_min_label">Min</string>
+    <string name="demo_max_label">Max</string>
+    <string name="title_activity_range_seek_bar_demo">Range Seek Bar Demo</string>
 </resources>

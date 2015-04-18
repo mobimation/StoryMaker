@@ -218,8 +218,8 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
 
     /*********************************************************************************************
      * Text Recorder launch page
-     * TODO: This page needs to be a list of text artifacts. On the page needs to
-     * TODO: exist a button to launch input of a new text artifact.
+     * TODO: This page needs to be a list of text artifacts.
+     * TODO: A button is needed on the page for launching the input of a new text artifact.
      */
     public static class TextRecorderLaunchFragment extends Fragment {
         /**
