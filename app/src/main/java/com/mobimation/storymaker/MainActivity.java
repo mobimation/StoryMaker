@@ -20,6 +20,8 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.yahoo.mobile.client.android.util.RangeSeekBarDemoActivity;
+
 /**
  * Main navigation activity of the StoryMaker app.
  * A ViewPager is used for accomplishing a sideways swipe action
@@ -96,16 +98,19 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
         Log.d(TAG, "onPageSelected() - page=" + i);
         switch (i) {
             case 0:
-                pageIndicator.setText("Abcd");
+                pageIndicator.setText("Abcde");
                 break;
             case 1:
-                pageIndicator.setText("aBcd");
+                pageIndicator.setText("aBcde");
                 break;
             case 2:
-                pageIndicator.setText("abCd");
+                pageIndicator.setText("abCde");
                 break;
             case 3:
-                pageIndicator.setText("abcD");
+                pageIndicator.setText("abcDe");
+                break;
+            case 4:
+                pageIndicator.setText("abcdE");
                 break;
         }
     }
@@ -141,6 +146,8 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
                     return PhotoRecorderLaunchFragment.newInstance(position+1);
                 case 3:
                     return StoriesFragment.newInstance(position+1);
+                case 4:
+                    return RangeSeekBarDemoLaunchFragment.newInstance(position+1);
             }
             return PlayLaunchFragment.newInstance(position+1);
         }
@@ -148,7 +155,7 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
         @Override
         public int getCount() {
             // Total pages.
-            return 4;
+            return 5;
         }
 
 
@@ -157,17 +164,20 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
             Log.d("SectionsPagerAdapter", "getPageTitle() - position=" + position);
             switch (position) {
                 case 0:
-                    pageIndicator.setText("Abcd");
-                    return "Abcd";
+                    pageIndicator.setText("Abcde");
+                    return "Abcde";
                 case 1:
-                    pageIndicator.setText("aBcd");
-                    return "aBcd";
+                    pageIndicator.setText("aBcde");
+                    return "aBcde";
                 case 2:
-                    pageIndicator.setText("abCd");
-                    return "abCd";
+                    pageIndicator.setText("abCde");
+                    return "abCde";
                 case 3:
-                    pageIndicator.setText("abcD");
-                    return "abcD";
+                    pageIndicator.setText("abcDe");
+                    return "abcDe";
+                case 4:
+                    pageIndicator.setText("abcdE");
+                    return "abcdE";
             }
             return null;
         }
@@ -349,6 +359,51 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
               public void onClick(View view) {
                   startActivity(new Intent(getActivity(), StoryEditorActivity.class));
               }
+            });
+            return rootView;
+        }
+    }
+
+    /*********************************************************************************************
+     * Demo page for RangeSeekBar UI widget
+     */
+    public static class RangeSeekBarDemoLaunchFragment extends Fragment {
+        /**
+         * The fragment argument representing the section number for this
+         * fragment.
+         */
+        View rootView;
+
+        private static final String ARG_SECTION_NUMBER = "section_number";
+
+        /**
+         * Returns a new instance of this fragment for the given section
+         * number.
+         */
+        public static RangeSeekBarDemoLaunchFragment newInstance(int sectionNumber) {
+            Log.d("RangeSeekBarFragment","sectionNumber="+sectionNumber);
+            RangeSeekBarDemoLaunchFragment fragment = new RangeSeekBarDemoLaunchFragment();
+            Bundle args = new Bundle();
+            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
+            fragment.setArguments(args);
+            return fragment;
+        }
+
+        public RangeSeekBarDemoLaunchFragment() {
+            Log.d("RangeSeekBarFragment", "constructor");
+        }
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+            Log.d("RangeSeekBarFragment","onCreateView()");
+            rootView = inflater.inflate(R.layout.fragment_stories_launcher, container, false);
+            final Button b= (Button)rootView.findViewById(R.id.buttonRangeSeekBarDemoLaunch);
+            b.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    startActivity(new Intent(getActivity(), RangeSeekBarDemoActivity.class));
+                }
             });
             return rootView;
         }
