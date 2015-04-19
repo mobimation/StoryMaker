@@ -59,7 +59,8 @@
         </activity>
         <activity
             android:name="com.yahoo.mobile.client.android.util.RangeSeekBarDemoActivity"
-            android:label="@string/title_activity_range_seek_bar_demo" >
+            android:label="@string/title_activity_range_seek_bar_demo"
+            android:theme="@style/Theme.AppCompat.DialogWhenLarge" >
         </activity>
     </application>
 
