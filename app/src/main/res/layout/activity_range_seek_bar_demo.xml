@@ -25,7 +25,8 @@
         />
 
     <com.yahoo.mobile.client.android.util.RangeSeekBar android:layout_width="fill_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:id="@+id/bar1" />
 
     <TextView
         android:layout_width="fill_parent"
@@ -37,7 +38,7 @@
         android:layout_height="wrap_content"
         rsb:absoluteMinValue="20"
         rsb:absoluteMaxValue="150"
-        />
+        android:id="@+id/bar2" />
 
     <TextView
         android:layout_width="fill_parent"
@@ -49,7 +50,7 @@
         android:layout_height="wrap_content"
         rsb:absoluteMinValue="15.23"
         rsb:absoluteMaxValue="140.54"
-        />
+        android:id="@+id/bar3" />
 
     <TextView
         android:layout_width="fill_parent"
@@ -62,6 +63,6 @@
         rsb:absoluteMinValue="20"
         rsb:absoluteMaxValue="150"
         rsb:singleThumb="true"
-        />
+        android:id="@+id/bar4" />
 
 </LinearLayout>
