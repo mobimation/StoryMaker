@@ -8,6 +8,7 @@
 
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
+
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
@@ -56,6 +57,10 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_camera"
             android:theme="@style/FullscreenTheme" >
+        </activity>
+        <activity
+            android:name=".test.VideoclipEditSliderTester"
+            android:label="@string/title_activity_videoclip_edit_slider_tester" >
         </activity>
     </application>
 
