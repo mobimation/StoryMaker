@@ -2,6 +2,8 @@ package com.mobimation.storymaker;
 
 import android.app.Activity;
 
+import com.yahoo.mobile.client.android.util.RangeSeekBar;
+
 /**
  * Created by gunnarforsgren on 15-02-16.
  *
@@ -9,4 +11,5 @@ import android.app.Activity;
  */
 public class VideoContentEditor extends Activity {
     private static final String TAG = VideoContentEditor.class.getSimpleName();
+    RangeSeekBar rsb;  // TODO: Just to see that it can be imported for now
 }
