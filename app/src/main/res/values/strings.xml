@@ -20,6 +20,11 @@
     <string name="title_activity_progressor">Progressor</string>
     <string name="title_activity_audio_play">AudioPlayActivity</string>
 
+    <string name="service_started">Delivery Service started</string>
+    <string name="service_stopped">Delivery Service stopped</string>
+    <string name="service_connected">Delivery Service Connected</string>
+    <string name="service_disconnected">Delivery Service Disconnected</string>
+
     <string name="title_activity_camera">Camera</string>
     <string name="demo_min_label">Min</string>
     <string name="demo_max_label">Max</string>
