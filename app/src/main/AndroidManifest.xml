@@ -67,6 +67,12 @@
             android:label="@string/title_activity_range_seek_bar_demo"
             android:theme="@style/Theme.AppCompat.DialogWhenLarge" >
         </activity>
+
+        <service
+            android:name=".DeliveryService"
+            android:enabled="true"
+            android:exported="true" >
+        </service>
     </application>
 
 </manifest>
