@@ -8,6 +8,7 @@
 
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
+
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
@@ -62,6 +63,12 @@
             android:label="@string/title_activity_range_seek_bar_demo"
             android:theme="@style/Theme.AppCompat.DialogWhenLarge" >
         </activity>
+
+        <service
+            android:name=".DeliveryService"
+            android:enabled="true"
+            android:exported="true" >
+        </service>
     </application>
 
 </manifest>
