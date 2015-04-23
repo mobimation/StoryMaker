@@ -41,6 +41,8 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
     SectionsPagerAdapter mSectionsPagerAdapter;
     DeliveryService deliveryService;
     private static final String TAG = MainActivity.class.getSimpleName();
+    Button buttonStartService;
+    private Intent svc;
     /**
      * The {@link ViewPager} that will host the section contents.
      */
@@ -112,6 +114,21 @@ public class MainActivity extends FragmentActivity implements ViewPager.OnPageCh
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
+
+        svc = new Intent(MainActivity.this, DeliveryService.class);
+
+        buttonStartService= (Button) findViewById(R.id.buttonStartService);
+        buttonStartService.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Launch file transfer service for the transfer of a file
+                // TODO putExtra typically used to specify what
+                // TODO file to transfer.
+                // svc.putExtra("file", file);
+                // svc.putExtra("id",id);  // And so on....
+                MainActivity.this.startService(svc);
+            }
+        });
 
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.pager);
