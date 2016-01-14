@@ -1,12 +1,12 @@
-Storymaker is a social app for story telling made up of text,voice,pictures and video.
-Story telling here means describing something by means of assembling one or more of
-text, voice, video and still picture (the artifacts) into a playback sequence that
+Storymaker, an Android app under development, is a social app for story telling / creation
+made up of text,voice,pictures and video. Story telling here means describing something by means of
+assembling one or more of text, voice, video and still picture (the artifacts) into a playback sequence that
 represents a message or story.
 
 Artifacts are basis of story elements that visually appear and disappear at creator specified
 points in time during playback.  
 
-A story is shared as a script that results in playback by the StoryMaker app on the recipient side.  This means distribution of the story to friends and others will occur in a very lightweight way where only the script is passed around. The StoryMaker app is registered as handler of the content type that the StoryMaker script represents. When run the script specifies is processed by StoryMaker which assembles and plays the story at runtime.
+A story is shared as a script that results in playback by the StoryMaker app on the recipient side.  Both someone creating and receiving a story use the same StoryMaker app. This means distribution of the story to friends and others will occur in a very lightweight way where only the script is passed around. The StoryMaker app is registered as handler of the content type that the StoryMaker script represents. When run the script specifies is processed by StoryMaker which assembles and plays the story at runtime.
 Artifacts that make up the story is retrieved on demand by StoryMaker from servers in the cloud.
 
 A major technical challenge of this principle is to assure that delays in retrieving artifacts
