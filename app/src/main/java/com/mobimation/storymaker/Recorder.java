@@ -6,5 +6,9 @@ package com.mobimation.storymaker;
  * A Recorder is a base class for Recording something.
  */
 public interface Recorder {
-    int record(String name);
+    int start();
+    int pause();
+    int stop();
+    int delete();
+    int save(String destination);
 }

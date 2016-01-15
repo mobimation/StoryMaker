@@ -9,10 +9,10 @@ import android.app.Activity;
  * This determines the initial content of a Voice Artifact which is later
  * available for editing or Clip operations.
  */
-public class VoiceRecorder extends Activity implements Recorder {
+public class VoiceRecorder extends Activity  {
     private static final String TAG = VoiceRecorder.class.getSimpleName();
 
-    @Override
+
     public int record(String name) {
         return 0;
     }

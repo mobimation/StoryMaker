@@ -16,7 +16,7 @@ import android.widget.TextView;
  * This determines the initial content of a Text Artifact which is later
  * available for editing or Clip operations.
  */
-public class TextRecorder extends Activity implements Recorder {
+public class TextRecorder extends Activity {
     private static final String TAG = TextRecorder.class.getSimpleName();
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -36,15 +36,10 @@ public class TextRecorder extends Activity implements Recorder {
             }
         });
     }
-    @Override
-    public int record(String name) {
-        return 0;
-    }
 
     private Typeface getFont(String fontName) {
         return Typeface.createFromAsset(getAssets(), fontName);
     }
-
 
 
 }

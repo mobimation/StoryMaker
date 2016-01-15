@@ -9,9 +9,9 @@ import android.app.Activity;
  * This determines the initial content of a Video Artifact which is later
  * available for editing or Clip operations.
  */
-public class VideoRecorder extends Activity implements Recorder {
+public class VideoRecorder extends Activity  {
     private static final String TAG = VideoRecorder.class.getSimpleName();
-    @Override
+
     public int record(String name) {
         return 0;
     }
