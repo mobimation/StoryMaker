@@ -16,8 +16,8 @@ A story can also be shared to an NFC tag and in a future versions other proximit
 
 StoryMaker shall include an easy to manage functionality for gathering and cataloging of produced artifacts so that such story material is conveniently at hand when assembling a story.  It shall also be possible to share such an artifact repository among users by means of links to cloud storage.
 
-This app is currently in a stage of research/refinement where certain aspects of the app is
-staged for test runs of separate functions for evaluation. The complete app is planned for Q2 2016.
+This app is currently in a stage of research/principal evaluation where certain aspects of the app is
+staged for test runs of separate functions for evaluation. The complete app is planned for Q2 2017.
 
 Unimplemented so far:
 - The captivating story teller editor
