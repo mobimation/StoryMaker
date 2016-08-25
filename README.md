@@ -1,7 +1,7 @@
 Storymaker, an Android app under development, is a social app for story telling / creation
 made up of text,voice,pictures and video. Story telling here means describing something by means of
 assembling one or more of text, voice, video and still picture (the artifacts) into a playback sequence that
-represents a message or story.
+represents a message or story. It can be described as a kind of "MMS on steroids" with several twists.
 
 Artifacts are basis of story elements that visually appear and disappear at creator specified
 points in time during playback. StoryMaker makes use of a "Scene" concept where multithreaded scheduling of event playback can occur in an overlapped fashion over time where the playback machine "Progressor" manages the progression of the scripted story (artiface playback events that begin and end at specific points in time as specified by the script).
