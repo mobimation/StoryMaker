@@ -10,7 +10,7 @@ A story is shared as a script that results in playback by the StoryMaker app on 
 Artifacts that make up the story is retrieved on demand by StoryMaker from servers in the cloud.
 
 A major technical challenge of this principle is to assure that delays in retrieving artifacts
-needed during playback (prefetch) is not causing playback delays/interruptions. This is still subject to evaluation/experimentation.
+needed during playback is not causing playback delays/interruptions. Prefetch operations and caching is still subject to evaluation/experimentation.
 
 A story can also be shared to an NFC tag and in a future versions other proximity triggers such as iBeacons. It means that when a user´s phone that has Storymaker installed comes in proximity of a Storymaker written NFC tag the tagged story will play.
 
@@ -18,7 +18,7 @@ StoryMaker shall include an easy to manage functionality for gathering and catal
 
 This app is currently in a stage of research/principal evaluation where certain aspects of the app is
 staged for test runs of separate functions for evaluation. The complete app is planned for Q2 2017.
-(Note in July 2020: A slight delay occurred. But idea strong enough to cause renewed interest).
+(Note in July 2020: A slight delay occurred. But idea strong enough to motivate renewed interest).
 
 Unimplemented so far:
 - The captivating story teller editor
