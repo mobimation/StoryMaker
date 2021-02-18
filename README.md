@@ -1,4 +1,4 @@
-Storymaker, an Android app under development, is a social app for story telling / creation
+Storymaker, a Java based Android app under development, is a social app for story telling / creation
 made up of text,voice,pictures and video. Story telling here means describing something by means of
 assembling one or more of text, voice, video and still picture (the artifacts) into a playback sequence that
 represents a message or story. It can be described as a kind of "MMS on steroids" with several twists.
